@@ -1,5 +1,9 @@
+from logging import getLogger
+
 from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdateFunds, AccountBase
 
+
+logger = getLogger()
 
 class AccountRepository:
     
@@ -21,13 +25,9 @@ class AccountRepository:
             return AccountView.model_validate(doc)
         return None
     
-    async def delete_account_by_iban(self, iban: str) -> None:
-        await self.collection.update_one(
-            {"iban": iban},
-            {"$set": {"isDeleted": True}}
-            )
-        
-        return await self.find_account_by_iban(iban)
+    async def delete_account_by_iban(self, iban: str) -> bool:
+        result = await self.collection.delete_one({"iban": iban})
+        return result.deleted_count > 0
     
     async def update_account_funds(self, iban: str, data: AccountUpdateFunds) -> AccountView | None:
         update_data = data.model_dump(exclude_unset=True)

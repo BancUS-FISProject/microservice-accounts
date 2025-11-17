@@ -13,7 +13,6 @@ class AccountBase(BaseModel):
     subscription: str
     funds: int
     isBlocked: bool
-    isDeleted: bool
 
 # Account update data needed
 class AccountCreate(BaseModel):
