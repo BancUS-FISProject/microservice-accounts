@@ -13,13 +13,12 @@ class AccountBase(BaseModel):
     subscription: str
     funds: int
     isBlocked: bool
-    isDeleted: bool
 
 # Account update data needed
 class AccountCreate(BaseModel):
     name: str
     email: str
-    subscription: Optional[str]
+    subscription: Optional[str] = None
 
 # Account update funds data needed
 class AccountUpdateFunds(BaseModel):
@@ -27,9 +26,9 @@ class AccountUpdateFunds(BaseModel):
     funds: int
 
 class AccountUpdate(BaseModel):
-    name: Optional[str]
-    email: Optional[str]
-    subscription: Optional[str]
+    name: Optional[str] = None
+    email: Optional[str] = None
+    subscription: Optional[str] = None
     
 class AccountView(BaseModel):
     name: str
