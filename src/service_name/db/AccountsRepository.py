@@ -33,27 +33,31 @@ class AccountRepository:
         update_data = data.model_dump(exclude_unset=True, exclude_none=True)
         
         if not update_data:
-            return await self.find_account_by_iban(iban)
+            modified = await self.find_account_by_iban(iban)
+            return AccountView.model_validate(modified)
         
         await self.collection.update_one(
             {"iban": iban},
             {"$set": update_data}
             )
         
-        return await self.find_account_by_iban(iban)
+        modified = await self.find_account_by_iban(iban)
+        return AccountView.model_validate(modified)
     
     async def update_account(self, iban: str, data: AccountUpdate) -> AccountView | None:
         update_data = data.model_dump(exclude_unset=True, exclude_none=True)
         
         if not update_data:
-            return await self.find_account_by_iban(iban)
+            modified = await self.find_account_by_iban(iban)
+            return AccountView.model_validate(modified)
         
         await self.collection.update_one(
             {"iban": iban},
             {"$set": update_data}
             )
         
-        return await self.find_account_by_iban(iban)
+        modified = await self.find_account_by_iban(iban)
+        return AccountView.model_validate(modified)
     
     async def block_account_by_iban(self, iban: str) -> AccountView | None:
         await self.collection.update_one(
@@ -61,7 +65,8 @@ class AccountRepository:
             {"$set": {"isBlocked": True}}
             )
         
-        return await self.find_account_by_iban(iban)
+        modified = await self.find_account_by_iban(iban)
+        return AccountView.model_validate(modified)
     
     async def unblock_account_by_iban(self, iban: str) -> AccountView | None:
         await self.collection.update_one(
@@ -69,4 +74,5 @@ class AccountRepository:
             {"$set": {"isBlocked": False}}
             )
         
-        return await self.find_account_by_iban(iban)
+        modified = await self.find_account_by_iban(iban)
+        return AccountView.model_validate(modified)

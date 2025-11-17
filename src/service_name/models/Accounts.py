@@ -22,7 +22,6 @@ class AccountCreate(BaseModel):
 
 # Account update funds data needed
 class AccountUpdateFunds(BaseModel):
-    iban: str
     funds: int
 
 class AccountUpdate(BaseModel):

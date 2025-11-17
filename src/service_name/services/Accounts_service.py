@@ -1,4 +1,4 @@
-from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase
+from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdateFunds
 from ..db.AccountsRepository import AccountRepository
 from ..core import extensions as ext
 
@@ -21,3 +21,19 @@ class AccountService:
     
     async def get_account_by_iban(self, iban: str) -> AccountView | None:
         return await self.repo.find_account_by_iban(iban=iban)
+    
+    async def account_update(self, iban:str, data: AccountUpdate) -> AccountView:
+        return await self.repo.update_account(iban, data)
+    
+    async def account_update_funds(self, iban:str, data: AccountUpdateFunds) -> AccountView:
+        #Verify the sum or sub can be done
+        return await self.repo.update_account_funds(iban, data)
+    
+    async def delete_account(self, iban: str):
+        return await self.repo.delete_account_by_iban(iban)
+    
+    async def block_account(self, iban: str):
+        return await self.repo.block_account_by_iban(iban)
+    
+    async def unblock_account(self, iban: str):
+        return await self.repo.unblock_account_by_iban(iban)
