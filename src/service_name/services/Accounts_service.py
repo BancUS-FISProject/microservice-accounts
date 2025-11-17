@@ -1,6 +1,8 @@
-from ..models.Accounts import AccountCreate, AccountUpdate, AccountView
+from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase
 from ..db.AccountsRepository import AccountRepository
 from ..core import extensions as ext
+
+from schwifty import IBAN
 
 
 class AccountService:
@@ -8,14 +10,14 @@ class AccountService:
         self.repo = repository or AccountRepository(ext.db)
     
     async def create_new_account(self, data: AccountCreate) -> AccountView:
-        # Business logic here
-  
-        new_account_doc = await self.repo.insert_account(data)
+        data_dict = data.model_dump(by_alias=True)
         
-        return new_account_doc
+        iban_es = IBAN.random(country_code='ES')
+        data_dict['iban'] = str(iban_es)
+        
+        new_account = AccountBase(**data_dict)
+        
+        return await self.repo.insert_account(new_account)
     
-    async def get_account_by_id(self, account_id: str) -> AccountView | None:
-        return await self.repo.find_account_by_id(account_id)
-    
-    async def update_account_details(self, account_id: str, data: AccountUpdate) -> AccountView | None:
-        return await self.repo.update_account(account_id, data)
+    async def get_account_by_iban(self, iban: str) -> AccountView | None:
+        return await self.repo.find_account_by_iban(iban=iban)
