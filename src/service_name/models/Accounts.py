@@ -1,17 +1,43 @@
+from datetime import datetime
+
 from pydantic import BaseModel
 from typing import Optional, List
 
+# Base account data
 class AccountBase(BaseModel):
-    account_id: int
-    limit: float
-    products: List[str] = []
+    name: str
+    iban: str
+    cards: List[str]
+    creation_date: datetime
+    email: str
+    subscription: str
+    funds: int
+    isBlocked: bool
+    isDeleted: bool
 
-class AccountCreate(AccountBase):
-    pass
+# Account update data needed
+class AccountCreate(BaseModel):
+    name: str
+    email: str
+    subscription: Optional[str]
+
+# Account update funds data needed
+class AccountUpdateFunds(BaseModel):
+    iban: str
+    funds: int
 
 class AccountUpdate(BaseModel):
-    limit: Optional[float] = None
-    products: Optional[List[str]] = None
-
-class AccountView(AccountBase):
+    name: Optional[str]
+    email: Optional[str]
+    subscription: Optional[str]
+    
+class AccountView(BaseModel):
+    name: str
+    iban: str
+    cards: List[str]
+    creation_date: datetime
+    email: str
+    subscription: str
+    funds: int
+    isBlocked: bool
     pass

@@ -1,0 +1,21 @@
+2025-11-17 11:03:07,036 - INFO:     Settings loaded.
+2025-11-17 11:03:07,036 - INFO:     Routes registered
+2025-11-17 11:03:07,044 - INFO:     Service is starting up...
+2025-11-17 11:03:07,044 - INFO:     Connecting to Database
+2025-11-17 11:03:07,764 - INFO:     Database connected
+2025-11-17 11:03:07,764 - INFO:     Checking collections...
+2025-11-17 11:03:07,872 - INFO:     Collection 'accounts' created.
+2025-11-17 11:03:07,872 - INFO:     Database client initialized and collections checked.
+2025-11-17 11:03:07,872 - INFO:     Service started successfully
+2025-11-17 11:03:28,486 - INFO:     Service is shutting down...
+2025-11-17 11:03:28,486 - INFO:     Closing Database
+2025-11-17 11:03:28,517 - INFO:     Service shut down complete.
+2025-11-17 11:03:31,643 - INFO:     Settings loaded.
+2025-11-17 11:03:31,643 - INFO:     Routes registered
+2025-11-17 11:03:31,654 - INFO:     Service is starting up...
+2025-11-17 11:03:31,654 - INFO:     Connecting to Database
+2025-11-17 11:03:32,136 - INFO:     Database connected
+2025-11-17 11:03:32,136 - INFO:     Checking collections...
+2025-11-17 11:03:32,170 - INFO:     Collection 'accounts' already exists.
+2025-11-17 11:03:32,170 - INFO:     Database client initialized and collections checked.
+2025-11-17 11:03:32,170 - INFO:     Service started successfully

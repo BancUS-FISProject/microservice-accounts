@@ -4,7 +4,7 @@ from .config import settings
 
 from logging import getLogger
 
-logger = getLogger(__name__)
+logger = getLogger()
 logger.setLevel(settings.LOG_LEVEL)
 
 db_client: AsyncIOMotorClient | None = None
@@ -23,13 +23,32 @@ async def init_db_client():
         await db_client.admin.command('ping')
         
         db = db_client[settings.MONGO_DATABASE_NAME]
-        
-        logger.info("Database connected")
     
     except Exception as e:
         logger.error("Error connecting to database")
         logger.debug(e)
         raise e
+    logger.info("Database connected")
+    
+    
+    logger.info("Checking collections...")
+    required_collections = ["accounts"]         # Collections to be used further.
+    
+    try:
+        existing_collections = await db.list_collection_names()
+        
+        for collection_name in required_collections:
+            if collection_name not in existing_collections:
+                await db.create_collection(collection_name)
+                logger.info(f"Collection '{collection_name}' created.")
+            else:
+                logger.info(f"Collection '{collection_name}' already exists.")
+    
+    except Exception as e:
+        logger.error(f"Error checking/creating collections: {e}")
+        raise
+        
+    logger.info("Database client initialized and collections checked.")
     
 def close_db_client():
     global db_client, db
