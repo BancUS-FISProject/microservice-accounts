@@ -3,7 +3,7 @@ import pytest_asyncio
 from unittest.mock import AsyncMock, MagicMock
 from datetime import datetime
 
-from src.service_name.models.Accounts import AccountBase, AccountUpdate, AccountUpdateFunds, AccountView
+from src.service_name.models.Accounts import AccountBase, AccountUpdate, AccountUpdatebalance, AccountView
 from src.service_name.db.AccountsRepository import AccountRepository
 
 
@@ -42,7 +42,7 @@ def sample_account_data():
         "creation_date": now,
         "email": "test@example.com",
         "subscription": "premium",
-        "funds": 1000,
+        "balance": 1000,
         "isBlocked": False,
         "isDeleted": False,
         "_id": "mock_object_id_123"
@@ -114,21 +114,21 @@ async def test_delete_account_by_iban_failure(account_repository, mock_collectio
     assert result is False
 
 
-async def test_update_account_funds(account_repository, mock_collection, sample_account_data):
+async def test_update_account_balance(account_repository, mock_collection, sample_account_data):
     iban = sample_account_data["iban"]
-    new_funds = 5000
-    update_data = AccountUpdateFunds(iban=iban, funds=new_funds)
+    new_balance = 5000
+    update_data = AccountUpdatebalance(iban=iban, balance=new_balance)
     
     updated_doc = sample_account_data.copy()
-    updated_doc["funds"] = new_funds
+    updated_doc["balance"] = new_balance
     
     mock_collection.find_one.return_value = updated_doc
     
-    result = await account_repository.update_account_funds(iban, update_data)
+    result = await account_repository.update_account_balance(iban, update_data)
     
     expected_update = {"$set": update_data.model_dump(exclude_unset=True)}
     mock_collection.update_one.assert_called_once_with({"iban": iban}, expected_update)
-    assert result.funds == new_funds
+    assert result.balance == new_balance
 
 
 async def test_update_account_no_email(account_repository, mock_collection, sample_account_data):
