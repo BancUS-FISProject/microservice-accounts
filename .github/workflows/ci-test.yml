@@ -2,7 +2,7 @@ name: Integration Tests (CI)
 
 on:
   pull_request:
-    branches: [ main, master ]
+    branches: [ main, master, dev ]
 
 jobs:
   test-api:
@@ -29,7 +29,7 @@ jobs:
 
     - name: Init API in background
       run: |
-        uvicorn main:app --host 0.0.0.0 --port 8000 &
+        uvicorn src.accounts.app:create_app --factory --host 0.0.0.0 --port 8000 &
         
         sleep 5
 
