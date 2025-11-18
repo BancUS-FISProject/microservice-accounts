@@ -9,6 +9,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    env:
+        MONGO_CONNECTION_STRING: ${{ secrets.MONGO_CONNECTION_STRING }}
+        MONGO_DATABASE_NAME: ${{ secrets.MONGO_DATABASE_NAME }}
+
     strategy:
       matrix:
         python-version: [ '3.12' ]
