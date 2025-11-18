@@ -1,0 +1,47 @@
+"microservice-accounts\.venv\Scripts\python.exe" "C:/Program Files/JetBrains/PyCharm 2025.2.2/plugins/python-ce/helpers/pycharm/_jb_pytest_runner.py" --path Test_API_V1.py
+Testing started at 10:40 ...
+Launching pytest with arguments Test_API_V1.py --no-header --no-summary -q in microservice-accounts\tests
+
+============================= test session starts =============================
+collecting ... collected 13 items
+
+Test_API_V1.py::test_create_account PASSED                               [  7%]
+Test_API_V1.py::test_create_account_missing_param PASSED                 [ 15%]
+Test_API_V1.py::test_get_account PASSED                                  [ 23%]
+Test_API_V1.py::test_get_account_not_found PASSED                        [ 30%]
+Test_API_V1.py::test_update_account_email PASSED                         [ 38%]
+Test_API_V1.py::test_update_account_balance_multiple PASSED              [ 46%]
+Test_API_V1.py::test_update_account_balance_insufficient PASSED          [ 53%]
+Test_API_V1.py::test_update_account_balance_not_found PASSED             [ 61%]
+Test_API_V1.py::test_block_account PASSED                                [ 69%]
+Test_API_V1.py::test_unblock_account PASSED                              [ 76%]
+Test_API_V1.py::test_delete_account_not_found PASSED                     [ 84%]
+Test_API_V1.py::test_delete_account PASSED                               [ 92%]
+Test_API_V1.py::test_verify_account_deleted PASSED                       [100%]
+
+======================= 13 passed, 9 warnings in 5.88s ========================
+
+Process finished with exit code 0
+
+
+"microservice-accounts\.venv\Scripts\python.exe" "C:/Program Files/JetBrains/PyCharm 2025.2.2/plugins/python-ce/helpers/pycharm/_jb_pytest_runner.py" --path Tests_AccountsRepository.py 
+Testing started at 10:41 ...
+Launching pytest with arguments Tests_AccountsRepository.py --no-header --no-summary -q in microservice-accounts\tests
+
+============================= test session starts =============================
+collecting ... collected 10 items
+
+Tests_AccountsRepository.py::test_insert_account PASSED                  [ 10%]
+Tests_AccountsRepository.py::test_find_account_by_iban_found PASSED      [ 20%]
+Tests_AccountsRepository.py::test_find_account_by_iban_not_found PASSED  [ 30%]
+Tests_AccountsRepository.py::test_delete_account_by_iban_success PASSED  [ 40%]
+Tests_AccountsRepository.py::test_delete_account_by_iban_failure PASSED  [ 50%]
+Tests_AccountsRepository.py::test_update_account_balance PASSED          [ 60%]
+Tests_AccountsRepository.py::test_update_account_no_email PASSED         [ 70%]
+Tests_AccountsRepository.py::test_update_account_no_data PASSED          [ 80%]
+Tests_AccountsRepository.py::test_block_account_by_iban PASSED           [ 90%]
+Tests_AccountsRepository.py::test_unblock_account_by_iban PASSED         [100%]
+
+============================= 10 passed in 0.29s ==============================
+
+Process finished with exit code 0
