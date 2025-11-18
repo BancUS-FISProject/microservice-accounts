@@ -48,7 +48,7 @@ def sample_account_data():
         "_id": "mock_object_id_123"
         }
 
-
+@pytest.mark.asyncio
 async def test_insert_account(account_repository, mock_collection, sample_account_data):
     account_base = AccountBase(**sample_account_data)
     
