@@ -8,21 +8,9 @@ jobs:
   test-api:
 
     runs-on: ubuntu-latest
-    services:
-      mongo:
-        image: mongo:latest
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd mongo
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
 
     env:
-      SECRET_KEY: "testing_secret_key"
-
-      MONGO_CONNECTION_STRING: "mongodb://localhost:27017/test_db"
+      MONGO_CONNECTION_STRING: ${{ secrets.MONGO_CONNECTION_STRING }}
       MONGO_DATABASE_NAME: ${{ secrets.MONGO_DATABASE_NAME }}
 
     strategy:
