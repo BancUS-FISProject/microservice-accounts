@@ -3,8 +3,8 @@ import pytest_asyncio
 from unittest.mock import AsyncMock, MagicMock
 from datetime import datetime
 
-from src.service_name.models.Accounts import AccountBase, AccountUpdate, AccountUpdatebalance, AccountView
-from src.service_name.db.AccountsRepository import AccountRepository
+from src.accounts.models.Accounts import AccountBase, AccountUpdate, AccountUpdatebalance, AccountView
+from src.accounts.db.AccountsRepository import AccountRepository
 
 
 pytestmark = pytest.mark.asyncio
@@ -48,7 +48,7 @@ def sample_account_data():
         "_id": "mock_object_id_123"
         }
 
-
+@pytest.mark.asyncio
 async def test_insert_account(account_repository, mock_collection, sample_account_data):
     account_base = AccountBase(**sample_account_data)
     

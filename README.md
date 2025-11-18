@@ -1,3 +1,7 @@
+# Contenedor generado
+
+docker pull alvvigsua/microservice-accounts:latest
+
 # Estructura del proyecto
 
 ```bash
