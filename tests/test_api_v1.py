@@ -1,6 +1,5 @@
 import pytest
 import httpx
-import pytest_asyncio
 
 BASE_URL = "http://127.0.0.1:8000/v1/accounts"
 

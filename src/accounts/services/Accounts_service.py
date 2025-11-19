@@ -34,13 +34,11 @@ class AccountService:
         if not acc:
             return EmptyPatch404()
         
-        if acc.balance + data.balance > 0 :
+        if acc.balance + data.balance >= 0 :
             data.balance = acc.balance + data.balance
             return await self.repo.update_account_balance(iban, data)
         else:
             return EmptyPatch403()
-        
-        
     
     async def delete_account(self, iban: str):
         return await self.repo.delete_account_by_iban(iban)

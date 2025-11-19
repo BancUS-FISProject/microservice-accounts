@@ -2,7 +2,7 @@ from quart import Blueprint, request, abort
 from quart_schema import validate_request, validate_response, tag, document_request, document_response
 
 from ...models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdatebalance, AccountBase
-from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404
+from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404, EmptyPatch202, EmptyPost400
 
 from ...services.Accounts_service import AccountService
 
@@ -18,6 +18,7 @@ bp = Blueprint("accounts_v1", __name__, url_prefix="/v1/accounts")
 @bp.post("/")
 @validate_request(AccountCreate)
 @validate_response(AccountView, 201)
+@document_response(EmptyPost400, 400)
 @tag(["v1"])
 async def create_account(data: AccountCreate):
     service = AccountService()
@@ -36,6 +37,7 @@ async def view_account(iban: str):
 @document_request(AccountUpdate)    #Document request to allow patch individual fields
 @validate_response(AccountView)
 @document_response(EmptyPatch400, 400)
+@document_response(EmptyPatch404, 404)
 @tag(["v1"])
 async def update_account(iban: str):
     service = AccountService()
@@ -73,6 +75,7 @@ async def update_account_balance(iban: str):
     return res
 
 @bp.delete("/<string:iban>")
+@document_response(EmptyPatch202, 202)
 @tag(["v1"])
 async def delete_account(iban: str):
     service = AccountService()
@@ -81,6 +84,9 @@ async def delete_account(iban: str):
 
 @bp.patch("/<string:iban>/block")
 @validate_response(AccountView)
+@document_response(EmptyPatch202, 202)
+@document_response(EmptyPatch400, 400)
+@document_response(EmptyPatch404, 404)
 @tag(["v1"])
 async def block_account(iban: str):
     service = AccountService()
@@ -89,6 +95,9 @@ async def block_account(iban: str):
 
 @bp.patch("/<string:iban>/unblock")
 @validate_response(AccountView)
+@document_response(EmptyPatch202, 202)
+@document_response(EmptyPatch400, 400)
+@document_response(EmptyPatch404, 404)
 @tag(["v1"])
 async def unblock_account(iban: str):
     service = AccountService()
