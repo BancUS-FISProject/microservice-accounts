@@ -7,6 +7,12 @@ class EmptyPatch202(BaseModel):
     No content
     """
     pass
+
+class EmptyDelete204(BaseModel):
+    """
+    No content
+    """
+    pass
     
 class EmptyGet404(BaseModel):
     """
@@ -35,5 +41,17 @@ class EmptyPatch403(BaseModel):
 class EmptyPatch404(BaseModel):
     """
     Account not found
+    """
+    pass
+
+class EmptyPost404(BaseModel):
+    """
+    Account not found
+    """
+    pass
+
+class EmptyError503(BaseModel):
+    """
+    Service Unavailable
     """
     pass

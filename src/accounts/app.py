@@ -2,7 +2,7 @@ from quart import Quart
 from quart_schema import QuartSchema, Tag
 
 from .core.config import settings
-from .core import extensions as ext
+from .core import external_connections as ext
 
 from logging import getLogger, Formatter, StreamHandler
 from logging.handlers import TimedRotatingFileHandler
