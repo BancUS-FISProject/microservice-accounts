@@ -1,11 +1,11 @@
-from typing import Optional, Dict
+from typing import Dict
 from logging import getLogger
 
 from ..models.Accounts import (
     AccountUpdate, AccountView,
     AccountUpdatebalance
     )
-from ..models.Cards import CreateCardResponse
+from ..models.Cards import CreateCardResponse, DeleteCardRequest, DeleteCardResponse
 from .AccountsDatabase import AccountRepository
 
 
@@ -42,28 +42,37 @@ class CachedAccountRepository(AccountRepository):
         return result
     
     async def update_account_balance(self, iban: str, data: AccountUpdatebalance) -> AccountView | None:
-        result = await super().update_account_balance(iban, data)
         self._invalidate_cache(iban)
+        result = await super().update_account_balance(iban, data)
         return result
     
     async def update_account(self, iban: str, data: AccountUpdate) -> AccountView | None:
-        result = await super().update_account(iban, data)
         self._invalidate_cache(iban)
+        result = await super().update_account(iban, data)
         return result
     
     async def block_account_by_iban(self, iban: str) -> AccountView | None:
-        result = await super().block_account_by_iban(iban)
         self._invalidate_cache(iban)
+        result = await super().block_account_by_iban(iban)
         return result
     
     async def unblock_account_by_iban(self, iban: str) -> AccountView | None:
-        result = await super().unblock_account_by_iban(iban)
         self._invalidate_cache(iban)
+        result = await super().unblock_account_by_iban(iban)
         return result
     
     async def account_add_card(self, iban: str, card: CreateCardResponse) -> AccountView | None:
-        result = await super().account_add_card(iban, card)
         self._invalidate_cache(iban)
+        result = await super().account_add_card(iban, card)
+        return result
+    
+    async def account_delete_card(self, iban: str, card: DeleteCardResponse) -> bool:
+        result = await super().account_delete_card(iban, card)
+        
+        if result and iban in self._cache:
+            del self._cache[iban]
+            logger.info(f"Cache invalidated (delete) for account: iban = {iban}")
+        
         return result
     
     def _invalidate_cache(self, iban: str):

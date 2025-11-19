@@ -2,8 +2,9 @@ from quart import Blueprint, request, abort
 from quart_schema import validate_request, validate_response, tag, document_request, document_response
 
 from ...models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdatebalance, AccountBase
+from ...models.Cards import DeleteCardRequest
 from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404, EmptyPatch202, EmptyPost400, \
-    EmptyPost404, EmptyError503
+    EmptyPost404, EmptyError503, EmptyDelete204
 
 from ...services.Accounts_service import AccountService
 
@@ -76,7 +77,7 @@ async def update_account_balance(iban: str):
     return res
 
 @bp.delete("/<string:iban>")
-@document_response(EmptyPatch202, 202)
+@document_response(EmptyDelete204, 204)
 @tag(["v1"])
 async def delete_account(iban: str):
     service = AccountService()
@@ -119,4 +120,14 @@ async def create_card_account(iban: str):
     if isinstance(res, EmptyError503):
         abort(503, description="Microservice cards is unavailable")
     return res
+
+@bp.delete("/card/<string:iban>")
+@validate_request(DeleteCardRequest)
+@document_response(EmptyDelete204, 204)
+@tag(["v1"])
+async def delete_card_account(iban: str, data: DeleteCardRequest):
+    # todo improve status code
+    service = AccountService()
+    await service.account_delete_card(iban, data)
+    return "", 204
 

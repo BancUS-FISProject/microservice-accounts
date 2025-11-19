@@ -7,3 +7,9 @@ class CreateCardRequest(BaseModel):
 
 class CreateCardResponse(BaseModel):
     pan: str
+    
+class DeleteCardRequest(BaseModel):
+    pan: str
+    
+class DeleteCardResponse(BaseModel):
+    pan: str

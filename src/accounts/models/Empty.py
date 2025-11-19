@@ -7,6 +7,12 @@ class EmptyPatch202(BaseModel):
     No content
     """
     pass
+
+class EmptyDelete204(BaseModel):
+    """
+    No content
+    """
+    pass
     
 class EmptyGet404(BaseModel):
     """

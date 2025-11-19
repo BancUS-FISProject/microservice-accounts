@@ -6,7 +6,7 @@ from ..core import external_connections as ext
 
 from schwifty import IBAN
 
-from ..models.Cards import CreateCardRequest, CreateCardResponse
+from ..models.Cards import CreateCardRequest, CreateCardResponse, DeleteCardRequest, DeleteCardResponse
 from ..models.Empty import EmptyPatch403, EmptyPatch404, EmptyPost404, EmptyError503
 
 
@@ -67,3 +67,20 @@ class AccountService:
             return EmptyError503()
         
         return await self.repo.find_account_by_iban(iban)
+    
+    async def account_delete_card(self, iban: str, data: DeleteCardRequest) -> AccountView | EmptyPost404 | EmptyError503:
+        acc = await self.repo.find_account_by_iban(iban)
+        if not acc:
+            return EmptyPost404()
+            
+        # todo Mock data added while cards microservice is in development
+        # res = delete_card(DeleteCardRequest(name=acc['name']))
+        res = DeleteCardResponse(pan=data.pan)
+        
+        if isinstance(res, DeleteCardResponse):
+            await self.repo.account_delete_card(iban, res)
+        elif isinstance(res, EmptyError503):
+            return EmptyError503()
+        
+        return await self.repo.find_account_by_iban(iban)
+        

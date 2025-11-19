@@ -2,7 +2,7 @@ from logging import getLogger
 
 from ..core.config import settings
 from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdatebalance, AccountBase
-from ..models.Cards import CreateCardResponse
+from ..models.Cards import CreateCardResponse, DeleteCardRequest, DeleteCardResponse
 
 
 logger = getLogger()
@@ -18,8 +18,6 @@ class AccountRepository:
         
         result = await self.collection.insert_one(account_doc)
         created_doc = await self.collection.find_one({"_id": result.inserted_id})
-        
-        logger.info(f"Database operation: account created = {created_doc['iban']}")
     
         if created_doc:
             res = AccountView.model_validate(created_doc)
@@ -78,7 +76,6 @@ class AccountRepository:
         
         modified = await self.find_account_by_iban(iban)
         
-        logger.info(f"Database operation: account updated = {modified['iban']}")
         if modified:
             res = AccountView.model_validate(modified)
             logger.info(f"Database operation: account updated = {res.iban}")
@@ -130,4 +127,11 @@ class AccountRepository:
         else:
             return None
         
-    # TODO account delete card
+    async def account_delete_card(self, iban: str, card: DeleteCardResponse) -> bool:
+        result = await self.collection.update_one(
+            {"iban": iban},
+            {"$pull": {"cards": card.pan}}
+            )
+    
+        logger.info(f"Database operation: card {card.pan} deleted from account {iban}")
+        return result.modified_count > 0
