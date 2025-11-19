@@ -3,13 +3,18 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 class Settings(BaseSettings):
     
-    # Default settings
+    # database config
     MONGO_CONNECTION_STRING: str = "mongodb://localhost:27017"
     MONGO_DATABASE_NAME: str = "sample_analytics"
     
+    # Log config
     LOG_LEVEL: str = "INFO"
     LOG_FILE: str = "log.txt"
     LOG_BACKUP_COUNT: int = 7
+    
+    # Cards microservice config
+    CARD_MICROSERVICE_BASE_URL: str = "http://localhost:9000"
+    CARD_MICROSERVICE_CREATE_CARD_ENDPOINT: str = "/v1/card"
     
     model_config = SettingsConfigDict(
         env_file=".env",

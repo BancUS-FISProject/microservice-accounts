@@ -2,14 +2,15 @@ from quart import Blueprint, request, abort
 from quart_schema import validate_request, validate_response, tag, document_request, document_response
 
 from ...models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdatebalance, AccountBase
-from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404, EmptyPatch202, EmptyPost400
+from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404, EmptyPatch202, EmptyPost400, \
+    EmptyPost404, EmptyError503
 
 from ...services.Accounts_service import AccountService
 
 from logging import getLogger
 from ...core.config import settings
 
-logger = getLogger(__name__)
+logger = getLogger()
 logger.setLevel(settings.LOG_LEVEL)
 
 bp = Blueprint("accounts_v1", __name__, url_prefix="/v1/accounts")
@@ -103,3 +104,19 @@ async def unblock_account(iban: str):
     service = AccountService()
     res = await service.unblock_account(iban)
     return "", 204 if res else abort(404, description="Account not found")
+
+@bp.post("/card/<string:iban>")
+@validate_response(AccountView, 201)
+@document_response(EmptyPost404, 404)
+@document_response(EmptyError503, 503)
+@tag(["v1"])
+async def create_card_account(iban: str):
+    # todo improve status code
+    service = AccountService()
+    res = await service.account_create_card(iban)
+    if isinstance(res, EmptyPost404):
+        abort(404, description="Account not found")
+    if isinstance(res, EmptyError503):
+        abort(503, description="Microservice cards is unavailable")
+    return res
+

@@ -1,17 +1,20 @@
+from ..comms.CardsMicroservice import create_card
+from ..db.CachedAccountsDatabase import CachedAccountRepository
 from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdatebalance
-from ..db.AccountsRepository import AccountRepository
-from ..core import extensions as ext
+from ..db.AccountsDatabase import AccountRepository
+from ..core import external_connections as ext
 
 from schwifty import IBAN
 
-from ..models.Empty import EmptyPatch403, EmptyPatch404
+from ..models.Cards import CreateCardRequest, CreateCardResponse
+from ..models.Empty import EmptyPatch403, EmptyPatch404, EmptyPost404, EmptyError503
 
 
 # Implement cache here
 
 class AccountService:
     def __init__(self, repository: AccountRepository | None = None):
-        self.repo = repository or AccountRepository(ext.db)
+        self.repo = repository or CachedAccountRepository(ext.db)
     
     async def create_new_account(self, data: AccountCreate) -> AccountView:
         data_dict = data.model_dump(by_alias=True)
@@ -48,3 +51,19 @@ class AccountService:
     
     async def unblock_account(self, iban: str):
         return await self.repo.unblock_account_by_iban(iban)
+    
+    async def account_create_card(self, iban: str) -> AccountView | EmptyPost404 | EmptyError503:
+        acc = await self.repo.find_account_by_iban(iban)
+        if not acc:
+            return EmptyPost404()
+        
+        # todo Mock data added while cards microservice is in development
+        #res = create_card(CreateCardRequest(name=acc['name']))
+        res = CreateCardResponse(pan="examplepan123123")
+        
+        if isinstance(res, CreateCardResponse):
+             return await self.repo.account_add_card(iban, res)
+        elif isinstance(res, EmptyError503):
+            return EmptyError503()
+        
+        return await self.repo.find_account_by_iban(iban)

@@ -37,3 +37,15 @@ class EmptyPatch404(BaseModel):
     Account not found
     """
     pass
+
+class EmptyPost404(BaseModel):
+    """
+    Account not found
+    """
+    pass
+
+class EmptyError503(BaseModel):
+    """
+    Service Unavailable
+    """
+    pass
