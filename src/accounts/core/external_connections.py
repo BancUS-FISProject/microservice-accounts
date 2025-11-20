@@ -1,4 +1,5 @@
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
+from redis.asyncio import Redis
 
 from .config import settings
 
@@ -9,6 +10,13 @@ logger.setLevel(settings.LOG_LEVEL)
 
 db_client: AsyncIOMotorClient | None = None
 db: AsyncIOMotorDatabase | None = None
+
+redis: Redis | None = None
+
+async def init_redis_client():
+    global redis
+    redis = await Redis(host=settings.REDIS_HOST, port=settings.REDIS_PORT, db=0, decode_responses=True)
+    await redis.ping()
 
 async def init_db_client():
     global db_client, db

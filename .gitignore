@@ -2,6 +2,12 @@
 .env
 .venv/
 
+# Temporal excluded files
+nginx.conf
+certs/
+*.crt
+*.key
+
 #Cache
 __pycache__/
 

@@ -1,4 +1,7 @@
+import redis.asyncio as redis
+
 from ..comms.CardsMicroservice import create_card
+from ..core.config import settings
 from ..db.CachedAccountsDatabase import CachedAccountRepository
 from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdatebalance
 from ..db.AccountsDatabase import AccountRepository
@@ -14,7 +17,7 @@ from ..models.Empty import EmptyPatch403, EmptyPatch404, EmptyPost404, EmptyErro
 
 class AccountService:
     def __init__(self, repository: AccountRepository | None = None):
-        self.repo = repository or CachedAccountRepository(ext.db)
+        self.repo = repository or CachedAccountRepository(ext.db, ext.redis)
     
     async def create_new_account(self, data: AccountCreate) -> AccountView:
         data_dict = data.model_dump(by_alias=True)

@@ -69,12 +69,23 @@ def create_app():
         
         # Database
         try:
+            logger.info("Awaiting database connection...")
             await ext.init_db_client()
-            
+            logger.info("Database connection initialized.")
         except Exception as e:
             logger.error("Database connection failed. Shutting down...")
             logger.debug(e)
             raise e
+        
+        try:
+            logger.info("Awaiting redis connection...")
+            await ext.init_redis_client()
+            logger.info("Redis connection initialized.")
+        except Exception as e:
+            logger.error("Redis connection failed. Shutting down...")
+            logger.debug(e)
+            raise e
+        
         logger.info("Service started successfully")
     
     # Release all resources before shutting down
