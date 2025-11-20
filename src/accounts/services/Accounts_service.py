@@ -38,7 +38,7 @@ class AccountService:
             return EmptyPatch404()
         
         if acc.balance + data.balance >= 0 :
-            data.balance = acc.balance + data.balance
+            data.balance = round(acc.balance + data.balance, 2)
             return await self.repo.update_account_balance(iban, data)
         else:
             return EmptyPatch403()

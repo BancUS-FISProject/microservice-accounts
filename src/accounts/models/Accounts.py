@@ -11,8 +11,11 @@ class AccountBase(BaseModel):
     creation_date: datetime = Field(default_factory=datetime.now)
     email: str
     subscription: str
-    balance: int = 0
+    balance: float = 0
     isBlocked: bool = False
+    # todo add subscription end date instead of field subscription
+    # tier1subscriptionend
+    # tier2subscriptionend
 
 # Account update data needed
 class AccountCreate(BaseModel):
@@ -22,7 +25,7 @@ class AccountCreate(BaseModel):
 
 # Account update balance data needed
 class AccountUpdatebalance(BaseModel):
-    balance: int
+    balance: float
 
 class AccountUpdate(BaseModel):
     name: Optional[str] = None
@@ -36,6 +39,6 @@ class AccountView(BaseModel):
     creation_date: datetime
     email: str
     subscription: str
-    balance: int
+    balance: float
     isBlocked: bool
     pass
