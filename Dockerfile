@@ -8,10 +8,6 @@ WORKDIR /app
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && rm -rf /var/lib/apt/lists/*
 
-ARG MONGO_CONNECTION_STRING
-
-ENV MONGO_CONNECTION_STRING=$MONGO_CONNECTION_STRING
-
 COPY requirements.txt .
 
 RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt

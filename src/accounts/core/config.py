@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     #Redis Config
     REDIS_HOST: str = "localhost"
     REDIS_PORT: int = 6379
+    REDIS_AVAILABLE: bool = False
     
     # Cards microservice config
     CARD_MICROSERVICE_BASE_URL: str = "http://localhost:9000"

@@ -16,7 +16,6 @@ logger.setLevel(settings.LOG_LEVEL)
 
 bp = Blueprint("accounts_v1", __name__, url_prefix="/v1/accounts")
 
-
 @bp.post("/")
 @validate_request(AccountCreate)
 @validate_response(AccountView, 201)
