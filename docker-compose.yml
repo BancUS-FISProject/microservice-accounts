@@ -1,0 +1,21 @@
+version: '3'
+services:
+
+  microservice-accounts:
+    image: alvvigsua/microservice-accounts:latest
+    container_name: accounts-service
+    networks:
+      - bankus-net
+    depends_on:
+      - redis-cache
+
+  redis-cache:
+    image: redis:alpine
+    container_name: redis-bankus
+    restart: always
+    networks:
+      - bankus-net
+
+networks:
+  bankus-net:
+    driver: bridge

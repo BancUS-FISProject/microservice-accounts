@@ -6,23 +6,24 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
-ARG MONGO_CONNECTION_STRING
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates && rm -rf /var/lib/apt/lists/*
+
 ARG MONGO_CONNECTION_STRING
 
-ENV MONGO_CONNECTION_STRING=$MONGO_CONNECTION_STRING \
-    MONGO_CONNECTION_STRING=$MONGO_CONNECTION_STRING
+ENV MONGO_CONNECTION_STRING=$MONGO_CONNECTION_STRING
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
 
 COPY src ./src
 
-RUN adduser --disabled-password --gecos '' appuser && \
-    chown -R appuser /app
+RUN adduser --disabled-password --gecos '' appuser && chown -R appuser /app
 USER appuser
 
 EXPOSE 8000
+
+HEALTHCHECK --interval=10s --timeout=5s --retries=5 \
+   CMD curl -f http://localhost:8000/health || exit 1
 
 CMD ["uvicorn", "src.accounts.app:create_app", "--factory", "--host", "0.0.0.0", "--port", "8000"]

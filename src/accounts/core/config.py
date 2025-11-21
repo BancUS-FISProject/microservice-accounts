@@ -2,15 +2,22 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    # Health config
+    HEALTH_STATUS: int = 0
+    HEALTH_STATUS_ROUTE: str = ""
     
     # database config
-    MONGO_CONNECTION_STRING: str = "mongodb://localhost:27017"
-    MONGO_DATABASE_NAME: str = "sample_analytics"
+    MONGO_CONNECTION_STRING: str = "mongodb://bankus_user:bankus_secret_pass@localhost:27017"
+    MONGO_DATABASE_NAME: str = "accounts"
     
     # Log config
     LOG_LEVEL: str = "INFO"
     LOG_FILE: str = "log.txt"
     LOG_BACKUP_COUNT: int = 7
+    
+    #Redis Config
+    REDIS_HOST: str = "localhost"
+    REDIS_PORT: int = 6379
     
     # Cards microservice config
     CARD_MICROSERVICE_BASE_URL: str = "http://localhost:9000"
