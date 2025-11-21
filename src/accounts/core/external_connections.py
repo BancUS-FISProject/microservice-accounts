@@ -20,7 +20,7 @@ async def init_redis_client():
 
 async def init_db_client():
     global db_client, db
-    logger.info(f"Connecting to Database")
+    logger.info(f"Connecting to Database.")
     try:
         db_client = AsyncIOMotorClient(
             settings.MONGO_CONNECTION_STRING,

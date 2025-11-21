@@ -2,6 +2,9 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
+    # Health config
+    HEALTH_STATUS: int = 0
+    HEALTH_STATUS_ROUTE: str = ""
     
     # database config
     MONGO_CONNECTION_STRING: str = "mongodb://bankus_user:bankus_secret_pass@localhost:27017"

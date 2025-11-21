@@ -1,17 +1,5 @@
 version: '3'
 services:
-  api-gateway:
-    image: nginx:latest
-    ports:
-      - "10000:80"
-      - "10443:443"
-    volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf
-      - ./certs:/etc/nginx/certs
-    networks:
-      - bankus-net
-    depends_on:
-      - microservice-accounts
 
   microservice-accounts:
     image: alvvigsua/microservice-accounts:latest
@@ -20,6 +8,7 @@ services:
       - bankus-net
     depends_on:
       - redis-cache
+
   redis-cache:
     image: redis:alpine
     container_name: redis-bankus
