@@ -1,5 +1,6 @@
 import time
 
+from pydantic import ValidationError
 from quart import Quart, jsonify
 from quart_schema import QuartSchema, Tag
 
