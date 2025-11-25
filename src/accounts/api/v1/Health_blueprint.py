@@ -1,9 +1,8 @@
-from quart import Blueprint, request, abort, jsonify
-from quart_schema import validate_request, validate_response, tag, document_request, document_response
+from quart import Blueprint, jsonify
+from quart_schema import tag, document_response
 
 from ...models.Health import Healthy, Starting
 
-from ...services.Accounts_service import AccountService
 
 from logging import getLogger
 from ...core.config import settings
