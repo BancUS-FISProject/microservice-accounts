@@ -9,54 +9,34 @@ from ..models.Empty import EmptyError503
 logger = getLogger()
 logger.setLevel(settings.LOG_LEVEL)
 
-async def create_card(card_data: CreateCardRequest) -> CreateCardResponse | EmptyError503:
+async def create_card_call(card_data: CreateCardRequest) -> CreateCardResponse:
     # Todo conn management when card microservice is available
     async with httpx.AsyncClient() as client:
-        try:
-            payload = card_data.model_dump(by_alias=True)
-            
-            response = await client.post(
-                f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_CREATE_CARD_ENDPOINT}",
-                json=payload,
-                timeout=10.0
+        payload = card_data.model_dump(by_alias=True)
+        
+        response = await client.post(
+            f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_CREATE_CARD_ENDPOINT}",
+            json=payload,
+            timeout=10.0
+        )
+        
+        response.raise_for_status()
+        response_data = response.json()
+        
+        return CreateCardResponse(**response_data)
+    
+async def delete_card_call(card_data: DeleteCardRequest) -> DeleteCardResponse:
+    # Todo conn management when card microservice is available
+    async with httpx.AsyncClient() as client:
+        payload = card_data.model_dump(by_alias=True)
+        
+        response = await client.post(
+            f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_CREATE_CARD_ENDPOINT}",
+            json=payload,
+            timeout=10.0
             )
-            
-            response.raise_for_status()
-            response_data = response.json()
-            
-            return CreateCardResponse(**response_data)
         
-        except httpx.HTTPStatusError as e:
-            logger.info("Card microservice is not responding")
-            logger.error(e)
-            return EmptyError503()
-        except Exception as e:
-            logger.info("Card microservice is not responding")
-            logger.error(e)
-            return EmptyError503()
+        response.raise_for_status()
+        response_data = response.json()
         
-async def delete_card(card_data: DeleteCardRequest) -> DeleteCardResponse | EmptyError503:
-    # Todo conn management when card microservice is available
-    async with httpx.AsyncClient() as client:
-        try:
-            payload = card_data.model_dump(by_alias=True)
-            
-            response = await client.post(
-                f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_CREATE_CARD_ENDPOINT}",
-                json=payload,
-                timeout=10.0
-                )
-            
-            response.raise_for_status()
-            response_data = response.json()
-            
-            return DeleteCardResponse(**response_data)
-        
-        except httpx.HTTPStatusError as e:
-            logger.info("Card microservice is not responding")
-            logger.error(e)
-            return EmptyError503()
-        except Exception as e:
-            logger.info("Card microservice is not responding")
-            logger.error(e)
-            return EmptyError503()
+        return DeleteCardResponse(**response_data)

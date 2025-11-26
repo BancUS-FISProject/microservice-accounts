@@ -1,4 +1,3 @@
-from ..comms.CardsMicroservice import create_card
 from ..core.config import settings
 from ..db.RedisCachedAccountsDatabase import RedisCachedAccountRepository
 from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdatebalance
