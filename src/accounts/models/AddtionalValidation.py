@@ -19,6 +19,7 @@ def validate_subscription(subscription: str) -> bool:
         return False
     
 def validate_iban(iban: str) -> bool:
+
     try:
         IBAN(iban)
         return True

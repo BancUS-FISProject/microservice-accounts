@@ -98,9 +98,9 @@ async def delete_account(iban: str):
     res = await service.delete_account(iban)
     
     if isinstance(res, EmptyDelete400):
-        abort(400, descrption="Bad Request")
+        abort(400, description="Bad Request")
     if isinstance(res, EmptyDelete404):
-        abort(404, descrption="Account not found")
+        abort(404, description="Account not found")
     return "",204
 
 @bp.patch("/<string:iban>/block")

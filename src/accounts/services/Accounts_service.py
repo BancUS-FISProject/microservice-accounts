@@ -15,6 +15,9 @@ from ..models.Empty import (EmptyPatch403, EmptyPatch404, EmptyPost404, EmptyErr
 
 from ..models import AddtionalValidation as val
 
+from logging import getLogger
+logger = getLogger()
+
 # Implement cache here
 
 class AccountService:
@@ -71,6 +74,7 @@ class AccountService:
             return EmptyPatch403()
     
     async def delete_account(self, iban: str) -> EmptyDelete400 | EmptyDelete204 | EmptyDelete404:
+
         if not validate_iban(iban):
             return EmptyDelete400()
         
