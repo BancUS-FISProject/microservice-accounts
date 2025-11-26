@@ -11,8 +11,7 @@ const AccountCard = ({ account, onClick }) => {
 
     const formatCardNumber = (cardNumber) => {
         if (!cardNumber) return 'N/A';
-        // Format as **** **** **** 1234
-        return `**** **** **** ${cardNumber.slice(-4)}`;
+        return cardNumber;
     };
 
     return (
@@ -64,12 +63,11 @@ const AccountCard = ({ account, onClick }) => {
                 </div>
             </div>
 
-            {/* Número de tarjeta */}
-            {account.tarjetas && account.tarjetas.length > 0 && (
+            {account.cards && account.cards.length > 0 && (
                 <div className="mt-4 pt-4 border-t border-gray-200">
                     <p className="text-sm text-gray-600">Tarjeta principal</p>
                     <p className="text-sm font-mono font-medium text-gray-800 mt-1">
-                        {formatCardNumber(account.tarjetas[0].numero)}
+                        {account.cards[0]}
                     </p>
                 </div>
             )}

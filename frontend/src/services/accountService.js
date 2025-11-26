@@ -1,14 +1,6 @@
 import api from './api';
 
-/**
- * Servicio para interactuar con la API de cuentas
- * Basado en el OpenAPI spec v3.1.0 - microservice-accounts
- */
 const accountService = {
-    // ============================================
-    // OPERACIONES DE CUENTA (CRUD)
-    // ============================================
-
     /**
      * POST /v1/accounts/
      * Crear una nueva cuenta
@@ -74,10 +66,6 @@ const accountService = {
         }
     },
 
-    // ============================================
-    // OPERACIONES DE BALANCE
-    // ============================================
-
     /**
      * PATCH /v1/accounts/operation/{iban}
      * Actualizar balance de la cuenta (depositar o retirar)
@@ -116,10 +104,6 @@ const accountService = {
         return accountService.updateBalance(iban, -Math.abs(amount));
     },
 
-    // ============================================
-    // OPERACIONES DE BLOQUEO
-    // ============================================
-
     /**
      * PATCH /v1/accounts/{iban}/block
      * Bloquear cuenta
@@ -149,10 +133,6 @@ const accountService = {
             throw error;
         }
     },
-
-    // ============================================
-    // OPERACIONES DE TARJETAS
-    // ============================================
 
     /**
      * POST /v1/accounts/card/{iban}
@@ -186,10 +166,6 @@ const accountService = {
             throw error;
         }
     },
-
-    // ============================================
-    // HEALTH CHECK
-    // ============================================
 
     /**
      * GET /v1/health

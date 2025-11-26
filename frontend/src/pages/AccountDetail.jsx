@@ -13,32 +13,12 @@ const AccountDetail = () => {
     const [error, setError] = useState('');
 
     useEffect(() => {
-        // Aquí se llamará al servicio para obtener los datos de la cuenta
-        // Por ahora, datos de ejemplo
         const fetchAccount = async () => {
             try {
                 setLoading(true);
-                // Simulación de llamada a API
-                // const data = await accountService.getAccountByIban(iban);
+                const data = await accountService.getAccountByIban(iban);
 
-                // Datos de ejemplo
-                const mockData = {
-                    iban: iban,
-                    saldo: 1500.50,
-                    estado: 'Activa',
-                    titular: 'Juan Pérez García',
-                    blocked: false, // Estado de bloqueo de la cuenta
-                    tarjetas: [
-                        {
-                            numero: '1234567890123456',
-                            tipo: 'Débito',
-                            fechaVencimiento: '12/25',
-                            estado: 'Activa'
-                        }
-                    ]
-                };
-
-                setAccount(mockData);
+                setAccount(data);
             } catch (err) {
                 setError('Error al cargar la cuenta');
             } finally {
@@ -51,10 +31,6 @@ const AccountDetail = () => {
 
     const handleTransaction = async (transaction) => {
         try {
-            // Aquí se llamará al servicio para realizar la transacción
-            // await accountService.performTransaction(iban, transaction);
-
-            // Actualizar saldo localmente (temporal)
             setAccount(prev => ({
                 ...prev,
                 saldo: transaction.type === 'depositar'

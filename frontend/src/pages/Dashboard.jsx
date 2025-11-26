@@ -19,7 +19,7 @@ const Dashboard = () => {
         setTimeout(() => setMessage({ type: '', text: '' }), 5000);
     };
 
-    // 1. Crear cuenta
+    // Crear cuenta
     const handleCreateAccount = async (e) => {
         e.preventDefault();
         setLoading(true);
@@ -37,7 +37,7 @@ const Dashboard = () => {
         }
     };
 
-    // 2. Obtener cuenta por IBAN
+    // Obtener cuenta por IBAN
     const handleGetAccount = async (e) => {
         e.preventDefault();
         if (!iban.trim()) {
@@ -56,7 +56,7 @@ const Dashboard = () => {
         }
     };
 
-    // 3. Actualizar información de cuenta
+    // Actualizar información de cuenta
     const handleUpdateAccount = async (e) => {
         e.preventDefault();
         if (!currentAccount) {
@@ -82,7 +82,7 @@ const Dashboard = () => {
         }
     };
 
-    // 4. Actualizar balance (depositar/retirar)
+    // Actualizar balance (depositar/retirar)
     const handleUpdateBalance = async (e, isDeposit) => {
         e.preventDefault();
         if (!currentAccount) {
@@ -109,7 +109,7 @@ const Dashboard = () => {
         }
     };
 
-    // 5. Crear tarjeta
+    // Crear tarjeta
     const handleCreateCard = async () => {
         if (!currentAccount) {
             showMessage('warning', 'Primero debe cargar una cuenta');
@@ -127,7 +127,7 @@ const Dashboard = () => {
         }
     };
 
-    // 6. Eliminar tarjeta
+    // Eliminar tarjeta
     const handleDeleteCard = async (e) => {
         e.preventDefault();
         if (!currentAccount) {
@@ -152,7 +152,7 @@ const Dashboard = () => {
         }
     };
 
-    // 7. Bloquear cuenta
+    // Bloquear cuenta
     const handleBlockAccount = async () => {
         if (!currentAccount) {
             showMessage('warning', 'Primero debe cargar una cuenta');
@@ -161,7 +161,8 @@ const Dashboard = () => {
         setLoading(true);
         try {
             const result = await accountService.blockAccount(currentAccount.iban);
-            setCurrentAccount(result);
+            const updatedAccount = await accountService.getAccountByIban(currentAccount.iban);
+            setCurrentAccount(updatedAccount);
             showMessage('success', 'Cuenta bloqueada exitosamente');
         } catch (error) {
             showMessage('danger', `Error al bloquear cuenta: ${error.response?.data?.detail || error.message}`);
@@ -170,7 +171,7 @@ const Dashboard = () => {
         }
     };
 
-    // 8. Desbloquear cuenta
+    // Desbloquear cuenta
     const handleUnblockAccount = async () => {
         if (!currentAccount) {
             showMessage('warning', 'Primero debe cargar una cuenta');
@@ -179,7 +180,8 @@ const Dashboard = () => {
         setLoading(true);
         try {
             const result = await accountService.unblockAccount(currentAccount.iban);
-            setCurrentAccount(result);
+            const updatedAccount = await accountService.getAccountByIban(currentAccount.iban);
+            setCurrentAccount(updatedAccount);
             showMessage('success', 'Cuenta desbloqueada exitosamente');
         } catch (error) {
             showMessage('danger', `Error al desbloquear cuenta: ${error.response?.data?.detail || error.message}`);
@@ -188,7 +190,7 @@ const Dashboard = () => {
         }
     };
 
-    // 9. Eliminar cuenta
+    // Eliminar cuenta
     const handleDeleteAccount = async () => {
         if (!currentAccount) {
             showMessage('warning', 'Primero debe cargar una cuenta');
@@ -211,15 +213,29 @@ const Dashboard = () => {
 
     return (
         <div className="container-fluid py-4" style={{ backgroundColor: '#f8f9fa', minHeight: '100vh' }}>
+            {/* Fixed position message alert */}
+            {message.text && (
+                <div
+                    className={`alert alert-${message.type} alert-dismissible fade show`}
+                    role="alert"
+                    style={{
+                        position: 'fixed',
+                        top: '20px',
+                        right: '20px',
+                        zIndex: 9999,
+                        minWidth: '300px',
+                        maxWidth: '500px',
+                        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+                    }}
+                >
+                    {message.text}
+                    <button type="button" className="btn-close" onClick={() => setMessage({ type: '', text: '' })}></button>
+                </div>
+            )}
+
             <div className="row">
                 <div className="col-12 mb-4">
                     <h1 className="text-center mb-3">Panel de Gestión de Cuentas</h1>
-                    {message.text && (
-                        <div className={`alert alert-${message.type} alert-dismissible fade show`} role="alert">
-                            {message.text}
-                            <button type="button" className="btn-close" onClick={() => setMessage({ type: '', text: '' })}></button>
-                        </div>
-                    )}
                 </div>
 
                 {/* Columna izquierda - Operaciones */}
@@ -232,11 +248,11 @@ const Dashboard = () => {
                             {/* Acordeón de operaciones */}
                             <div className="accordion" id="operationsAccordion">
 
-                                {/* 1. Crear Cuenta */}
+                                {/* Crear Cuenta */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#createAccount">
-                                            1. Crear Nueva Cuenta
+                                            Crear Nueva Cuenta
                                         </button>
                                     </h2>
                                     <div id="createAccount" className="accordion-collapse collapse show" data-bs-parent="#operationsAccordion">
@@ -266,11 +282,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* 2. Obtener Cuenta */}
+                                {/* Obtener Cuenta */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#getAccount">
-                                            2. Buscar Cuenta por IBAN
+                                            Buscar Cuenta por IBAN
                                         </button>
                                     </h2>
                                     <div id="getAccount" className="accordion-collapse collapse" data-bs-parent="#operationsAccordion">
@@ -288,11 +304,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* 3. Actualizar Cuenta */}
+                                {/* Actualizar Cuenta */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#updateAccount">
-                                            3. Actualizar Información de Cuenta
+                                            Actualizar Información de Cuenta
                                         </button>
                                     </h2>
                                     <div id="updateAccount" className="accordion-collapse collapse" data-bs-parent="#operationsAccordion">
@@ -322,11 +338,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* 4. Depositar/Retirar */}
+                                {/* Depositar/Retirar */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#balance">
-                                            4. Depositar / Retirar Dinero
+                                            Depositar / Retirar Dinero
                                         </button>
                                     </h2>
                                     <div id="balance" className="accordion-collapse collapse" data-bs-parent="#operationsAccordion">
@@ -347,11 +363,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* 5. Crear Tarjeta */}
+                                {/* Crear Tarjeta */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#createCard">
-                                            5. Crear Nueva Tarjeta
+                                            Crear Nueva Tarjeta
                                         </button>
                                     </h2>
                                     <div id="createCard" className="accordion-collapse collapse" data-bs-parent="#operationsAccordion">
@@ -364,11 +380,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* 6. Eliminar Tarjeta */}
+                                {/* Eliminar Tarjeta */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#deleteCard">
-                                            6. Eliminar Tarjeta
+                                            Eliminar Tarjeta
                                         </button>
                                     </h2>
                                     <div id="deleteCard" className="accordion-collapse collapse" data-bs-parent="#operationsAccordion">
@@ -386,11 +402,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* 7. Bloquear/Desbloquear Cuenta */}
+                                {/* Bloquear/Desbloquear Cuenta */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#blockAccount">
-                                            7. Bloquear / Desbloquear Cuenta
+                                            Bloquear / Desbloquear Cuenta
                                         </button>
                                     </h2>
                                     <div id="blockAccount" className="accordion-collapse collapse" data-bs-parent="#operationsAccordion">
@@ -407,11 +423,11 @@ const Dashboard = () => {
                                     </div>
                                 </div>
 
-                                {/* 8. Eliminar Cuenta */}
+                                {/* Eliminar Cuenta */}
                                 <div className="accordion-item">
                                     <h2 className="accordion-header">
                                         <button className="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#deleteAccount">
-                                            8. Eliminar Cuenta
+                                            Eliminar Cuenta
                                         </button>
                                     </h2>
                                     <div id="deleteAccount" className="accordion-collapse collapse" data-bs-parent="#operationsAccordion">
@@ -468,7 +484,7 @@ const Dashboard = () => {
                                     {/* Estado de bloqueo */}
                                     <div className="mb-3">
                                         <h6 className="text-muted mb-1">Estado de bloqueo</h6>
-                                        {currentAccount.blocked ? (
+                                        {currentAccount.isBlocked ? (
                                             <span className="badge bg-danger">
                                                 🔒 Cuenta bloqueada
                                             </span>
@@ -483,7 +499,8 @@ const Dashboard = () => {
                                     {currentAccount.cards && currentAccount.cards.length > 0 && (
                                         <div className="mb-3">
                                             <h6 className="text-muted mb-1">Tarjeta principal</h6>
-                                            <p className="font-monospace">**** **** **** {currentAccount.cards[0].pan?.slice(-4) || '****'}</p>
+                                            {/* <p className="font-monospace">**** **** **** {currentAccount.cards[0].pan?.slice(-4) || '****'}</p> */}
+                                            <p className="font-monospace">{currentAccount.cards[0]}</p>
                                         </div>
                                     )}
 
@@ -496,7 +513,7 @@ const Dashboard = () => {
                                                     <div key={index} className="list-group-item">
                                                         <div className="d-flex justify-content-between align-items-center">
                                                             <div>
-                                                                <p className="mb-0 font-monospace small">**** **** **** {card.pan?.slice(-4)}</p>
+                                                                <p className="mb-0 font-monospace small">**** **** **** {card?.slice(-4)}</p>
                                                                 <small className="text-muted">{card.card_type}</small>
                                                             </div>
                                                             <span className={`badge ${card.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>

@@ -22,13 +22,9 @@ const CardList = ({ cards = [] }) => {
                     >
                         <div>
                             <p className="font-mono text-sm text-gray-800">
-                                **** **** **** {card.numero?.slice(-4) || '****'}
-                            </p>
-                            <p className="text-xs text-gray-500 mt-1">
-                                {card.tipo || 'Débito'} • Vence: {card.fechaVencimiento || 'N/A'}
+                                {card}
                             </p>
                         </div>
-                        <StatusBadge status={card.estado} />
                     </div>
                 ))}
             </div>
