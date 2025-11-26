@@ -11,7 +11,7 @@ from .AccountsDatabase import AccountRepository
 logger = getLogger()
 
 
-class CachedAccountRepository(AccountRepository):
+class RedisCachedAccountRepository(AccountRepository):
     def __init__(self, db, redis_client: redis.Redis, ttl_seconds: int = 3600):
         super().__init__(db)
         self.redis = redis_client

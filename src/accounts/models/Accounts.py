@@ -21,7 +21,7 @@ class AccountBase(BaseModel):
 class AccountCreate(BaseModel):
     name: str
     email: str
-    subscription: str = "Free"
+    subscription: str
 
 # Account update balance data needed
 class AccountUpdatebalance(BaseModel):

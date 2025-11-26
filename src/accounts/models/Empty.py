@@ -2,7 +2,13 @@ from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import datetime
 
-class EmptyPatch202(BaseModel):
+class EmptyDelete200(BaseModel):
+    """
+    OK
+    """
+    pass
+
+class EmptyPatch204(BaseModel):
     """
     No content
     """
@@ -13,10 +19,11 @@ class EmptyDelete204(BaseModel):
     No content
     """
     pass
-    
-class EmptyGet404(BaseModel):
+
+
+class EmptyGet400(BaseModel):
     """
-    Account not found
+    Bad Request
     """
     pass
 
@@ -32,9 +39,21 @@ class EmptyPost400(BaseModel):
     """
     pass
 
+class EmptyDelete400(BaseModel):
+    """
+    Bad Request
+    """
+    pass
+
 class EmptyPatch403(BaseModel):
     """
     Forbidden Operation - Not sufficient funds
+    """
+    pass
+
+class EmptyGet404(BaseModel):
+    """
+    Account not found
     """
     pass
 
@@ -45,6 +64,12 @@ class EmptyPatch404(BaseModel):
     pass
 
 class EmptyPost404(BaseModel):
+    """
+    Account not found
+    """
+    pass
+
+class EmptyDelete404(BaseModel):
     """
     Account not found
     """

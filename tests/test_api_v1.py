@@ -7,7 +7,7 @@ test_data = {
     "iban": None,
     "initial_name": "test_name",
     "initial_email": "test.openapi@example.com",
-    "initial_subscription": "Premium"
+    "initial_subscription": "Free"
     }
 
 @pytest.mark.asyncio
@@ -70,12 +70,23 @@ async def test_get_account():
 
 
 @pytest.mark.asyncio
+async def test_get_account_not_found_invalid_IBAN():
+    """
+    Test GET /v1/accounts/<iban> — Get non-existent account
+    """
+    async with httpx.AsyncClient() as client:
+        valid_iban = "ES6915574722004050030844"
+        response = await client.get(f"{BASE_URL}/{valid_iban}")
+        assert response.status_code == 400
+        
+@pytest.mark.asyncio
 async def test_get_account_not_found():
     """
     Test GET /v1/accounts/<iban> — Get non-existent account
     """
     async with httpx.AsyncClient() as client:
-        response = await client.get(f"{BASE_URL}/IBAN-non-existent")
+        valid_iban = "ES6915574722004050030834"
+        response = await client.get(f"{BASE_URL}/{valid_iban}")
         assert response.status_code == 404
 
 
@@ -166,7 +177,8 @@ async def test_update_account_balance_not_found():
     """
     async with httpx.AsyncClient() as client:
         payload = {"balance": 100}
-        response = await client.patch(f"{BASE_URL}/operation/IBAN-non-existent", json=payload)
+        valid_iban = "ES6915574722004050030834"
+        response = await client.patch(f"{BASE_URL}/operation/{valid_iban}", json=payload)
         assert response.status_code == 404
 
 
@@ -209,9 +221,9 @@ async def test_delete_account_not_found():
     Test DELETE /v1/accounts/<iban> — Delete non-existent account
     """
     async with httpx.AsyncClient() as client:
-        response = await client.delete(f"{BASE_URL}/IBAN-non-existent")
-        # El blueprint devuelve 204
-        assert response.status_code == 204
+        valid_iban = "ES6915574722004050030834"
+        response = await client.delete(f"{BASE_URL}/{valid_iban}")
+        assert response.status_code == 404
 
 
 @pytest.mark.asyncio
