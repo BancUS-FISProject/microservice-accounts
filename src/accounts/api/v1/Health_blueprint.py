@@ -15,7 +15,7 @@ bp = Blueprint("health_v1", __name__, url_prefix="/v1")
 
 @bp.route("/health")
 
-@tag(['v1', 'health'])
+@tag(['health'])
 @document_response(Starting, 503)
 @document_response(Healthy, 200)
 async def health_check():

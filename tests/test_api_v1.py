@@ -126,7 +126,7 @@ async def test_update_account_balance_multiple(request):
         
         balance_to_add_1 = 100
         payload_1 = {"balance": balance_to_add_1}
-        response_1 = await client.patch(f"{BASE_URL}/operation/{iban}", json=payload_1)
+        response_1 = await client.patch(f"{BASE_URL}/operation/{iban}/USD", json=payload_1)
         
         assert response_1.status_code == 200
         expected_balance_1 = current_balance + balance_to_add_1
@@ -135,7 +135,7 @@ async def test_update_account_balance_multiple(request):
         
         balance_to_add_2 = 50
         payload_2 = {"balance": balance_to_add_2}
-        response_2 = await client.patch(f"{BASE_URL}/operation/{iban}", json=payload_2)
+        response_2 = await client.patch(f"{BASE_URL}/operation/{iban}/USD", json=payload_2)
         
         assert response_2.status_code == 200
         expected_balance_2 = expected_balance_1 + balance_to_add_2
@@ -159,7 +159,7 @@ async def test_update_account_balance_insufficient(request):
         balance_to_withdraw = current_balance + 1000
         payload = {"balance": -balance_to_withdraw}
         
-        response = await client.patch(f"{BASE_URL}/operation/{iban}", json=payload)
+        response = await client.patch(f"{BASE_URL}/operation/{iban}/USD", json=payload)
         assert response.status_code == 403
         
         
@@ -178,7 +178,7 @@ async def test_update_account_balance_not_found():
     async with httpx.AsyncClient() as client:
         payload = {"balance": 100}
         valid_iban = "ES6915574722004050030834"
-        response = await client.patch(f"{BASE_URL}/operation/{valid_iban}", json=payload)
+        response = await client.patch(f"{BASE_URL}/operation/{valid_iban}/USD", json=payload)
         assert response.status_code == 404
 
 

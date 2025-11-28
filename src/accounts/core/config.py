@@ -26,6 +26,12 @@ class Settings(BaseSettings):
     CARD_BREAKER_FAILS: int = 3
     CARD_BREAKER_TIMEOUT: int = 30
     
+    # Currencies microservice config
+    CURRENCIES_MICROSERVICE_BASE_URL: str = "http://localhost:8010"
+    CURRENCIES_MICROSERVICE_EXCHANGE_ENDPOINT: str = "/v1/currency/convert"
+    CURRENCIES_BREAKER_FAILS: int = 3
+    CURRENCIES_BREAKER_TIMEOUT: int = 30
+    
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

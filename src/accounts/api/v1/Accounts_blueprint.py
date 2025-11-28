@@ -63,14 +63,14 @@ async def update_account(iban: str):
     res = await service.account_update(iban, data)
     return res if res else abort(404, description="Account not found")
 
-@bp.patch("/operation/<string:iban>")
+@bp.patch("/operation/<string:iban>/<string:currency>")
 @document_request(AccountUpdatebalance)
 @validate_response(AccountView)
 @document_response(EmptyPatch400, 400)
 @document_response(EmptyPatch403, 403)
 @document_response(EmptyPatch404, 404)
 @tag(["v1"])
-async def update_account_balance(iban: str):
+async def update_account_balance(iban: str, currency: str):
     service = AccountService()
     
     # Validate JSON here
@@ -79,13 +79,15 @@ async def update_account_balance(iban: str):
         return abort(400, description="Bad Request")
     data = AccountUpdatebalance(**raw_data)
     
-    res = await service.account_update_balance(iban, data)
+    res = await service.account_update_balance(iban, currency, data)
     if isinstance(res, EmptyPatch400):
         abort(400, description="Bad Request")
     if isinstance(res, EmptyPatch403):
         abort(403, description="Forbidden Operation - Not sufficient funds")
     elif isinstance(res, EmptyPatch404):
         abort(404, description="Account not found")
+    elif isinstance(res, EmptyError503):
+        abort(503, description="Currencies exchange microservice is unavailable")
     return res
 
 @bp.delete("/<string:iban>")

@@ -11,8 +11,8 @@ from ..models.Empty import EmptyError503
 logger = getLogger()
 
 cards_breaker = CircuitBreaker(
-    fail_max=settings.BREAKER_FAILS,
-    timeout_duration=timedelta(seconds=settings.BREAKER_TIMEOUT)
+    fail_max=settings.CARD_BREAKER_FAILS,
+    timeout_duration=timedelta(seconds=settings.CARD_BREAKER_TIMEOUT)
 )
 
 async def create_card(card_data: CreateCardRequest) -> CreateCardResponse | EmptyError503:
