@@ -4,13 +4,11 @@ import httpx
 
 from ..core.config import settings
 from ..models.Cards import CreateCardRequest, CreateCardResponse, DeleteCardRequest, DeleteCardResponse
-from ..models.Empty import EmptyError503
 
 logger = getLogger()
 logger.setLevel(settings.LOG_LEVEL)
 
 async def create_card_call(card_data: CreateCardRequest) -> CreateCardResponse:
-    # Todo conn management when card microservice is available
     async with httpx.AsyncClient() as client:
         payload = card_data.model_dump(by_alias=True)
         
@@ -26,7 +24,6 @@ async def create_card_call(card_data: CreateCardRequest) -> CreateCardResponse:
         return CreateCardResponse(**response_data)
     
 async def delete_card_call(card_data: DeleteCardRequest) -> DeleteCardResponse:
-    # Todo conn management when card microservice is available
     async with httpx.AsyncClient() as client:
         payload = card_data.model_dump(by_alias=True)
         

@@ -1,3 +1,4 @@
+from .Currencies_service import exchange_currencies
 from ..core.config import settings
 from ..db.RedisCachedAccountsDatabase import RedisCachedAccountRepository
 from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdatebalance
@@ -58,8 +59,8 @@ class AccountService:
         res = await self.repo.update_account(iban, data)
         return res if res else EmptyGet404()
     
-    async def account_update_balance(self, iban:str, data: AccountUpdatebalance) -> (AccountView | EmptyPatch404 |
-                                                                                     EmptyPatch403 | EmptyPatch400):
+    async def account_update_balance(self, iban:str, currency:str, data: AccountUpdatebalance) -> (AccountView | EmptyPatch404 |
+                                                                                      EmptyPatch403 | EmptyPatch400 | EmptyError503):
         if not validate_iban(iban):
             return EmptyPatch400()
         
@@ -67,8 +68,16 @@ class AccountService:
         if not acc:
             return EmptyPatch404()
         
-        if acc.balance + data.balance >= 0 :
-            data.balance = round(acc.balance + data.balance, 2)
+        if currency != "USD":
+            res = await exchange_currencies(currency, "USD", data.balance)
+            if isinstance(res, EmptyError503):
+                return res
+            exchange = res.converted_amount
+        else:
+            exchange = data.balance
+        
+        if acc.balance + exchange >= 0 :
+            data.balance = round(acc.balance + exchange, 2)
             return await self.repo.update_account_balance(iban, data)
         else:
             return EmptyPatch403()
