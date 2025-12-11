@@ -21,13 +21,14 @@ class Settings(BaseSettings):
     REDIS_AVAILABLE: bool = False
     
     # Cards microservice config
-    CARD_MICROSERVICE_BASE_URL: str = "http://localhost:9000"
-    CARD_MICROSERVICE_CREATE_CARD_ENDPOINT: str = "/v1/card"
+    CARD_MICROSERVICE_BASE_URL: str = "http://cards-microservice:8000"
+    CARD_MICROSERVICE_CREATE_CARD_ENDPOINT: str = "/v1/cards"
+    CARD_MICROSERVICE_DELETE_CARD_ENDPOINT: str = "/v1/cards"  #ADD PAN at the end
     CARD_BREAKER_FAILS: int = 3
     CARD_BREAKER_TIMEOUT: int = 30
     
     # Currencies microservice config
-    CURRENCIES_MICROSERVICE_BASE_URL: str = "http://localhost:8010"
+    CURRENCIES_MICROSERVICE_BASE_URL: str = "http://currecies-microservice:8000"
     CURRENCIES_MICROSERVICE_EXCHANGE_ENDPOINT: str = "/v1/currency/convert"
     CURRENCIES_BREAKER_FAILS: int = 3
     CURRENCIES_BREAKER_TIMEOUT: int = 30

@@ -1,8 +1,8 @@
 from logging import getLogger
 
 from ..core.config import settings
-from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdatebalance, AccountBase
-from ..models.Cards import CreateCardResponse, DeleteCardRequest, DeleteCardResponse
+from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdateBalance, AccountBase
+from ..models.Cards import CreateCardResponse, DeleteCardRequest, DeleteCardResponse, CardInfo
 
 
 logger = getLogger()
@@ -41,7 +41,7 @@ class AccountRepository:
         logger.info(f"Database operation: account deleted = {iban}")
         return result.deleted_count > 0
     
-    async def update_account_balance(self, iban: str, data: AccountUpdatebalance) -> AccountView | None:
+    async def update_account_balance(self, iban: str, data: AccountUpdateBalance) -> AccountView | None:
         update_data = data.model_dump(exclude_unset=True, exclude_none=True)
         
         if not update_data:
@@ -113,10 +113,11 @@ class AccountRepository:
         else:
             return None
     
-    async def account_add_card(self, iban: str, card: CreateCardResponse) -> AccountView | None:
+    async def account_add_card(self, iban: str, card: CardInfo) -> AccountView | None:
+        data = card.model_dump()
         await self.collection.update_one(
             {"iban": iban},
-            {"$addToSet": {"cards": card.pan}}
+            {"$addToSet": {"cards": data}}
         )
         
         modified = await self.find_account_by_iban(iban)
@@ -127,10 +128,11 @@ class AccountRepository:
         else:
             return None
         
-    async def account_delete_card(self, iban: str, card: DeleteCardResponse) -> bool:
+    async def account_delete_card(self, iban: str, card: CardInfo) -> bool:
+        data = card.model_dump()
         result = await self.collection.update_one(
             {"iban": iban},
-            {"$pull": {"cards": card.pan}}
+            {"$pull": {"cards": data}}
             )
     
         logger.info(f"Database operation: card {card.pan} deleted from account {iban}")

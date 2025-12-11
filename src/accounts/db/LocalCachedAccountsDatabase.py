@@ -3,9 +3,9 @@ from logging import getLogger
 
 from ..models.Accounts import (
     AccountUpdate, AccountView,
-    AccountUpdatebalance
+    AccountUpdateBalance
     )
-from ..models.Cards import CreateCardResponse, DeleteCardRequest, DeleteCardResponse
+from ..models.Cards import CreateCardResponse, DeleteCardRequest, DeleteCardResponse, CardInfo
 from .AccountsDatabase import AccountRepository
 
 
@@ -41,7 +41,7 @@ class LocalCachedAccountRepository(AccountRepository):
         
         return result
     
-    async def update_account_balance(self, iban: str, data: AccountUpdatebalance) -> AccountView | None:
+    async def update_account_balance(self, iban: str, data: AccountUpdateBalance) -> AccountView | None:
         self._invalidate_cache(iban)
         result = await super().update_account_balance(iban, data)
         return result
@@ -61,12 +61,12 @@ class LocalCachedAccountRepository(AccountRepository):
         result = await super().unblock_account_by_iban(iban)
         return result
     
-    async def account_add_card(self, iban: str, card: CreateCardResponse) -> AccountView | None:
+    async def account_add_card(self, iban: str, card: CardInfo) -> AccountView | None:
         self._invalidate_cache(iban)
         result = await super().account_add_card(iban, card)
         return result
     
-    async def account_delete_card(self, iban: str, card: DeleteCardResponse) -> bool:
+    async def account_delete_card(self, iban: str, card: CardInfo) -> bool:
         result = await super().account_delete_card(iban, card)
         
         if result and iban in self._cache:

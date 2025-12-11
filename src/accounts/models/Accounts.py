@@ -3,11 +3,13 @@ from datetime import datetime
 from pydantic import BaseModel, Field
 from typing import Optional, List
 
-# Base account data
+from .Cards import CardInfo
+
+
 class AccountBase(BaseModel):
     name: str
     iban: str
-    cards: List[str] = Field(default_factory=list)
+    cards: List[CardInfo] = Field(default_factory=list)
     creation_date: datetime = Field(default_factory=datetime.now)
     email: str
     subscription: str
@@ -15,14 +17,12 @@ class AccountBase(BaseModel):
     balance: float = 0
     isBlocked: bool = False
 
-# Account update data needed
 class AccountCreate(BaseModel):
     name: str
     email: str
     subscription: str
 
-# Account update balance data needed
-class AccountUpdatebalance(BaseModel):
+class AccountUpdateBalance(BaseModel):
     balance: float
 
 class AccountUpdate(BaseModel):
@@ -33,7 +33,7 @@ class AccountUpdate(BaseModel):
 class AccountView(BaseModel):
     name: str
     iban: str
-    cards: List[str]
+    cards: List[CardInfo]
     creation_date: datetime
     email: str
     subscription: str

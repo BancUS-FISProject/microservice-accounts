@@ -1,7 +1,8 @@
 from .Currencies_service import exchange_currencies
+from .Cards_service import create_card, delete_card
 from ..core.config import settings
 from ..db.RedisCachedAccountsDatabase import RedisCachedAccountRepository
-from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdatebalance
+from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdateBalance
 from ..db.AccountsDatabase import AccountRepository
 from ..db.LocalCachedAccountsDatabase import LocalCachedAccountRepository
 from ..core import external_connections as ext
@@ -9,7 +10,7 @@ from ..core import external_connections as ext
 from schwifty import IBAN
 
 from ..models.AddtionalValidation import validate_iban, validate_email, validate_subscription
-from ..models.Cards import CreateCardRequest, CreateCardResponse, DeleteCardRequest, DeleteCardResponse
+from ..models.Cards import CreateCardRequest, CreateCardResponse, DeleteCardRequest, DeleteCardResponse, CardInfo
 from ..models.Empty import (EmptyPatch403, EmptyPatch404, EmptyPost404, EmptyError503, EmptyGet400,
                             EmptyPost400, EmptyPatch400, EmptyGet404, EmptyDelete400, EmptyDelete204, EmptyDelete404,
                             EmptyPatch204)
@@ -59,8 +60,8 @@ class AccountService:
         res = await self.repo.update_account(iban, data)
         return res if res else EmptyGet404()
     
-    async def account_update_balance(self, iban:str, currency:str, data: AccountUpdatebalance) -> (AccountView | EmptyPatch404 |
-                                                                                      EmptyPatch403 | EmptyPatch400 | EmptyError503):
+    async def account_update_balance(self, iban:str, currency:str, data: AccountUpdateBalance) -> (AccountView | EmptyPatch404 |
+                                                                                                   EmptyPatch403 | EmptyPatch400 | EmptyError503):
         if not validate_iban(iban):
             return EmptyPatch400()
         
@@ -122,12 +123,11 @@ class AccountService:
         if not acc:
             return EmptyPost404()
         
-        # todo Mock data added while cards microservice is in development
-        #res = create_card(CreateCardRequest(name=acc['name']))
-        res = CreateCardResponse(pan="examplepan123123")
+        res = await create_card(CreateCardRequest(cardholderName=acc.name))
         
         if isinstance(res, CreateCardResponse):
-             return await self.repo.account_add_card(iban, res)
+             info = CardInfo(pan=res.PAN)
+             return await self.repo.account_add_card(iban, info)
         elif isinstance(res, EmptyError503):
             return EmptyError503()
         
@@ -142,12 +142,11 @@ class AccountService:
         if not acc:
             return EmptyPost404()
             
-        # todo Mock data added while cards microservice is in development
-        # res = delete_card(DeleteCardRequest(name=acc['name']))
-        res = DeleteCardResponse(pan=data.pan)
+        res = await delete_card(DeleteCardRequest(pan=data.PAN))
         
         if isinstance(res, DeleteCardResponse):
-            await self.repo.account_delete_card(iban, res)
+            info = CardInfo(pan=res.PAN)
+            await self.repo.account_delete_card(iban, info)
         elif isinstance(res, EmptyError503):
             return EmptyError503()
         
