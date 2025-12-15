@@ -2,7 +2,7 @@ from quart import Blueprint, request, abort, jsonify
 from quart_schema import validate_request, validate_response, tag, document_request, document_response, \
     ResponseSchemaValidationError
 
-from ...models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdatebalance
+from ...models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdateBalance
 from ...models.Cards import DeleteCardRequest
 from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404, EmptyPost400, \
     EmptyPost404, EmptyError503, EmptyDelete204, EmptyGet400, EmptyDelete400, EmptyDelete404, EmptyDelete200, \
@@ -64,7 +64,7 @@ async def update_account(iban: str):
     return res if res else abort(404, description="Account not found")
 
 @bp.patch("/operation/<string:iban>/<string:currency>")
-@document_request(AccountUpdatebalance)
+@document_request(AccountUpdateBalance)
 @validate_response(AccountView)
 @document_response(EmptyPatch400, 400)
 @document_response(EmptyPatch403, 403)
@@ -77,7 +77,7 @@ async def update_account_balance(iban: str, currency: str):
     raw_data = await request.get_json()
     if raw_data is None:
         return abort(400, description="Bad Request")
-    data = AccountUpdatebalance(**raw_data)
+    data = AccountUpdateBalance(**raw_data)
     
     res = await service.account_update_balance(iban, currency, data)
     if isinstance(res, EmptyPatch400):
@@ -142,7 +142,6 @@ async def unblock_account(iban: str):
 @document_response(EmptyError503, 503)
 @tag(["v1"])
 async def create_card_account(iban: str):
-    # todo improve status code
     service = AccountService()
     res = await service.account_create_card(iban)
     if isinstance(res, EmptyPost400):
@@ -161,7 +160,6 @@ async def create_card_account(iban: str):
 @document_response(EmptyError503, 503)
 @tag(["v1"])
 async def delete_card_account(iban: str, data: DeleteCardRequest):
-    # todo improve status code
     service = AccountService()
     res = await service.account_delete_card(iban, data)
     if isinstance(res, EmptyPost400):

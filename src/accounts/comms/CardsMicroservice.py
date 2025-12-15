@@ -27,9 +27,8 @@ async def delete_card_call(card_data: DeleteCardRequest) -> DeleteCardResponse:
     async with httpx.AsyncClient() as client:
         payload = card_data.model_dump(by_alias=True)
         
-        response = await client.post(
-            f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_CREATE_CARD_ENDPOINT}",
-            json=payload,
+        response = await client.delete(
+            f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_DELETE_CARD_ENDPOINT}/{card_data.PAN}",
             timeout=10.0
             )
         

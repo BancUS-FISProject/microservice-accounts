@@ -1,13 +1,16 @@
 from pydantic import BaseModel
 
 class CreateCardRequest(BaseModel):
-    name: str
+    cardholderName: str
 
 class CreateCardResponse(BaseModel):
-    pan: str
+    PAN: str
     
 class DeleteCardRequest(BaseModel):
-    pan: str
+    PAN: str
     
 class DeleteCardResponse(BaseModel):
-    pan: str
+    PAN: str
+    
+class CardInfo(BaseModel):
+    PAN: str
