@@ -7,10 +7,10 @@ class CreateCardResponse(BaseModel):
     PAN: str
     
 class DeleteCardRequest(BaseModel):
-    pan: str
+    PAN: str
     
 class DeleteCardResponse(BaseModel):
     PAN: str
     
 class CardInfo(BaseModel):
-    pan: str
+    PAN: str

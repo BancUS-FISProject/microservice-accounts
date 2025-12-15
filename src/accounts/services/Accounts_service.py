@@ -126,7 +126,7 @@ class AccountService:
         res = await create_card(CreateCardRequest(cardholderName=acc.name))
         
         if isinstance(res, CreateCardResponse):
-             info = CardInfo(pan=res.PAN)
+             info = CardInfo(PAN=res.PAN)
              return await self.repo.account_add_card(iban, info)
         elif isinstance(res, EmptyError503):
             return EmptyError503()
@@ -142,10 +142,10 @@ class AccountService:
         if not acc:
             return EmptyPost404()
             
-        res = await delete_card(DeleteCardRequest(pan=data.PAN))
+        res = await delete_card(DeleteCardRequest(PAN=data.PAN))
         
         if isinstance(res, DeleteCardResponse):
-            info = CardInfo(pan=res.PAN)
+            info = CardInfo(PAN=res.PAN)
             await self.repo.account_delete_card(iban, info)
         elif isinstance(res, EmptyError503):
             return EmptyError503()

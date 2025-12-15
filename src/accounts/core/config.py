@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     # Cards microservice config
     CARD_MICROSERVICE_BASE_URL: str = "http://cards-microservice:8000"
     CARD_MICROSERVICE_CREATE_CARD_ENDPOINT: str = "/v1/cards"
-    CARD_MICROSERVICE_DELETE_CARD_ENDPOINT: str = "/v1/cards"  #ADD PAN at the end
+    CARD_MICROSERVICE_DELETE_CARD_ENDPOINT: str = "/v1/cards/pan"  #ADD PAN at the end
     CARD_BREAKER_FAILS: int = 3
     CARD_BREAKER_TIMEOUT: int = 30
     

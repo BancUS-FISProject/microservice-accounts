@@ -135,5 +135,5 @@ class AccountRepository:
             {"$pull": {"cards": data}}
             )
     
-        logger.info(f"Database operation: card {card.pan} deleted from account {iban}")
+        logger.info(f"Database operation: card {card.PAN} deleted from account {iban}")
         return result.modified_count > 0
