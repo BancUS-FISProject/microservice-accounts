@@ -39,7 +39,7 @@ def sample_account_data():
         "name": "Test User",
         "iban": "ES1234567890123456789012",
         "cards": [{
-            "pan": "4176741917211958"
+            "PAN": "4176741917211958"
         }],
         "creation_date": now,
         "email": "test@example.com",
