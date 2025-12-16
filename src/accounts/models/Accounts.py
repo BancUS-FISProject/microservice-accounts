@@ -39,4 +39,9 @@ class AccountView(BaseModel):
     subscription: str
     balance: float
     isBlocked: bool
-    pass
+    
+class AccountListResponse(BaseModel):
+    items: List[AccountView] = Field(..., description="La lista de cuentas de la página solicitada")
+    total: int = Field(..., description="El número total de cuentas que existen en la base de datos (sin paginar)")
+    page: int = Field(..., description="El número de página actual")
+    size: int = Field(..., description="El número de elementos por página (limit)")

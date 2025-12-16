@@ -1,4 +1,5 @@
 from logging import getLogger
+from typing import List
 
 from ..core.config import settings
 from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdateBalance, AccountBase
@@ -34,6 +35,19 @@ class AccountRepository:
             return res
         else:
             return None
+    
+    async def find_all_accounts(self, page: int = 1, limit: int = 20) -> List[AccountView]:
+        skip = (page - 1) * limit
+        cursor = self.collection.find({}).skip(skip).limit(limit)
+        
+        docs = await cursor.to_list(length=limit)
+        accounts = [AccountView.model_validate(doc) for doc in docs]
+        
+        logger.info(f"Database operation: retrieved {len(accounts)} accounts (Page {page})")
+        return accounts
+    
+    async def count_accounts(self) -> int:
+        return await self.collection.count_documents({})
     
     async def delete_account_by_iban(self, iban: str) -> bool:
         result = await self.collection.delete_one({"iban": iban})
