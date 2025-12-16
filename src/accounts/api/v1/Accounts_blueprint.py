@@ -1,8 +1,10 @@
+from typing import List
+
 from quart import Blueprint, request, abort, jsonify
 from quart_schema import validate_request, validate_response, tag, document_request, document_response, \
     ResponseSchemaValidationError
 
-from ...models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdateBalance
+from ...models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountUpdateBalance, AccountListResponse
 from ...models.Cards import DeleteCardRequest
 from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404, EmptyPost400, \
     EmptyPost404, EmptyError503, EmptyDelete204, EmptyGet400, EmptyDelete400, EmptyDelete404, EmptyDelete200, \
@@ -43,6 +45,19 @@ async def view_account(iban: str):
     if isinstance(res, EmptyGet400):
         abort(400, description="Bad Request")
         
+    return res
+
+
+@bp.get("/")
+@validate_response(AccountListResponse, 200)
+@tag(["v1"])
+async def view_accounts():
+    page = int(request.args.get("page", 1))
+    limit = int(request.args.get("limit", 20))
+    
+    service = AccountService()
+    res = await service.get_accounts(page=page, limit=limit)
+    
     return res
 
 @bp.patch("/<string:iban>")

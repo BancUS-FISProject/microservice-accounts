@@ -1,8 +1,11 @@
+from typing import List
+
 from .Currencies_service import exchange_currencies
 from .Cards_service import create_card, delete_card
 from ..core.config import settings
 from ..db.RedisCachedAccountsDatabase import RedisCachedAccountRepository
-from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdateBalance
+from ..models.Accounts import AccountCreate, AccountUpdate, AccountView, AccountBase, AccountUpdateBalance, \
+    AccountListResponse
 from ..db.AccountsDatabase import AccountRepository
 from ..db.LocalCachedAccountsDatabase import LocalCachedAccountRepository
 from ..core import external_connections as ext
@@ -47,6 +50,15 @@ class AccountService:
             return EmptyGet400()
         res = await self.repo.find_account_by_iban(iban=iban)
         return res if res else EmptyGet404()
+    
+    async def get_accounts(self, page, limit) -> AccountListResponse:
+        accounts_list, total_count = await self.repo.find_all_accounts(page, limit), await self.repo.count_accounts()
+        return AccountListResponse(
+            items=accounts_list,
+            total=total_count,
+            page=page,
+            size=limit
+            )
     
     async def account_update(self, iban:str, data: AccountUpdate) -> AccountView | EmptyPatch400 | EmptyPatch404:
         if data.email:
@@ -151,5 +163,6 @@ class AccountService:
             return EmptyError503()
         
         return await self.repo.find_account_by_iban(iban)
+
         
         
