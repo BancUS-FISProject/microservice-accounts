@@ -26,8 +26,8 @@ logger = getLogger()
 # Implement cache here
 
 class AccountService:
-    def __init__(self, repository: AccountRepository | None = None):
-        
+    def __init__(self, jwt=None, repository: AccountRepository | None = None):
+        self.jwt_token = jwt
         if settings.REDIS_AVAILABLE:
             self.repo = repository or RedisCachedAccountRepository(ext.db, ext.redis)
         else:
@@ -147,7 +147,7 @@ class AccountService:
         if len(acc.cards) >= limit:
             return EmptyPost403()
         
-        res = await create_card(CreateCardRequest(cardholderName=acc.name))
+        res = await create_card(CreateCardRequest(cardholderName=acc.name), jwt_token=self.jwt_token)
         
         if isinstance(res, CreateCardResponse):
              info = CardInfo(PAN=res.PAN)
@@ -166,7 +166,7 @@ class AccountService:
         if not acc:
             return EmptyPost404()
             
-        res = await delete_card(DeleteCardRequest(PAN=data.PAN))
+        res = await delete_card(DeleteCardRequest(PAN=data.PAN), jwt_token=self.jwt_token)
         
         if isinstance(res, DeleteCardResponse):
             info = CardInfo(PAN=res.PAN)

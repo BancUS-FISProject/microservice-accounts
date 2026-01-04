@@ -120,15 +120,6 @@ async def update_account(iban: str):
 @document_response(EmptyPatch404, 404)
 @tag(["v1"])
 async def update_account_balance(iban: str, currency: str):
-    auth_header = request.headers.get('Authorization')
-    if not auth_header:
-        return jsonify({"error": "Falta el header Authorization"}), 401
-    _, token = auth_header.split(" ")
-    jwt_data = decode_jwt(token)
-    jwt_iban = jwt_data.get('iban')
-    if jwt_iban != iban:
-        abort(403, description="Unauthorized access")
-    
     service = AccountService()
     
     # Validate JSON here
@@ -237,7 +228,7 @@ async def create_card_account(iban: str):
     if jwt_iban != iban:
         abort(403, description="Unauthorized access")
     
-    service = AccountService()
+    service = AccountService(jwt=auth_header)
     res = await service.account_create_card(iban)
     if isinstance(res, EmptyPost400):
         abort(400, description="Bad Request")
@@ -266,7 +257,7 @@ async def delete_card_account(iban: str, data: DeleteCardRequest):
     if jwt_iban != iban:
         abort(403, description="Unauthorized access")
     
-    service = AccountService()
+    service = AccountService(jwt=auth_header)
     res = await service.account_delete_card(iban, data)
     if isinstance(res, EmptyPost400):
         abort(400, description="Bad Request")

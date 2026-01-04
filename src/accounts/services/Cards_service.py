@@ -15,9 +15,9 @@ cards_breaker = CircuitBreaker(
     timeout_duration=timedelta(seconds=settings.CARD_BREAKER_TIMEOUT)
 )
 
-async def create_card(card_data: CreateCardRequest) -> CreateCardResponse | EmptyError503:
+async def create_card(card_data: CreateCardRequest, jwt_token=None) -> CreateCardResponse | EmptyError503:
     try:
-        return await cards_breaker.call_async(create_card_call, card_data)
+        return await cards_breaker.call_async(create_card_call, card_data, jwt_token)
 
     except CircuitBreakerError:
         logger.warning(f"Circuit Breaker Open: Skipping creation for card")
@@ -36,9 +36,9 @@ async def create_card(card_data: CreateCardRequest) -> CreateCardResponse | Empt
         return EmptyError503()
 
 
-async def delete_card(card_data: DeleteCardRequest) -> DeleteCardResponse | EmptyError503:
+async def delete_card(card_data: DeleteCardRequest, jwt_token=None) -> DeleteCardResponse | EmptyError503:
     try:
-        return await cards_breaker.call_async(delete_card_call, card_data)
+        return await cards_breaker.call_async(delete_card_call, card_data, jwt_token)
 
     except CircuitBreakerError:
         logger.warning(f"Circuit Breaker Open: Skipping deletion for card")

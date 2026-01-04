@@ -8,12 +8,18 @@ from ..models.Cards import CreateCardRequest, CreateCardResponse, DeleteCardRequ
 logger = getLogger()
 logger.setLevel(settings.LOG_LEVEL)
 
-async def create_card_call(card_data: CreateCardRequest) -> CreateCardResponse:
+async def create_card_call(jwt, card_data: CreateCardRequest) -> CreateCardResponse:
     async with httpx.AsyncClient() as client:
         payload = card_data.model_dump(by_alias=True)
         
+        headers = {
+            "Authorization": f"{jwt}",
+            "Content-Type": "application/json"
+        }
+        
         response = await client.post(
             f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_CREATE_CARD_ENDPOINT}",
+            headers=headers,
             json=payload,
             timeout=10.0
         )
@@ -23,12 +29,18 @@ async def create_card_call(card_data: CreateCardRequest) -> CreateCardResponse:
         
         return CreateCardResponse(**response_data)
     
-async def delete_card_call(card_data: DeleteCardRequest) -> DeleteCardResponse:
+async def delete_card_call(jwt, card_data: DeleteCardRequest) -> DeleteCardResponse:
     async with httpx.AsyncClient() as client:
         payload = card_data.model_dump(by_alias=True)
         
+        headers = {
+            "Authorization": f"{jwt}",
+            "Content-Type": "application/json"
+            }
+        
         response = await client.delete(
             f"{settings.CARD_MICROSERVICE_BASE_URL}{settings.CARD_MICROSERVICE_DELETE_CARD_ENDPOINT}/{card_data.PAN}",
+            headers=headers,
             timeout=10.0
             )
         
