@@ -1,21 +1,49 @@
-version: '3'
+version: '3.8'
 services:
 
-  microservice-accounts:
-    image: alvvigsua/microservice-accounts:latest
-    container_name: accounts-service
+  mongo:
+    image: mongo:7
+    container_name: bankus-mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=bankus_user
+      - MONGO_INITDB_ROOT_PASSWORD=bankus_secret_pass
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - bankus-net
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval \"db.adminCommand('ping')\""]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  microservice-user-auth:
+    image: rubjimjim/microservice-userauth:latest
+    container_name: userauth-service
+    environment:
+      - PORT=3000
+      - MONGO_URI=mongodb://bankus_user:bankus_secret_pass@mongo:27017/userauth_db?authSource=admin
+      - MONGO_HOST=mongo
+      - MONGO_PORT=27017
+      - MONGO_DB=userauth_db
+      - JWT_SECRET=changeme
+    ports:
+      - "3000:3000"
     networks:
       - bankus-net
     depends_on:
-      - redis-cache
-
-  redis-cache:
-    image: redis:alpine
-    container_name: redis-bankus
-    restart: always
-    networks:
-      - bankus-net
+      mongo:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   bankus-net:
     driver: bridge
+
+volumes:
+  mongo-data:

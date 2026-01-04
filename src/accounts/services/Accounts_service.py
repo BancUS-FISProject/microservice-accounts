@@ -16,7 +16,7 @@ from ..models.AddtionalValidation import validate_iban, validate_email, validate
 from ..models.Cards import CreateCardRequest, CreateCardResponse, DeleteCardRequest, DeleteCardResponse, CardInfo
 from ..models.Empty import (EmptyPatch403, EmptyPatch404, EmptyPost404, EmptyError503, EmptyGet400,
                             EmptyPost400, EmptyPatch400, EmptyGet404, EmptyDelete400, EmptyDelete204, EmptyDelete404,
-                            EmptyPatch204)
+                            EmptyPatch204, EmptyPost403)
 
 from ..models import AddtionalValidation as val
 
@@ -27,6 +27,7 @@ logger = getLogger()
 
 class AccountService:
     def __init__(self, repository: AccountRepository | None = None):
+        
         if settings.REDIS_AVAILABLE:
             self.repo = repository or RedisCachedAccountRepository(ext.db, ext.redis)
         else:
@@ -127,13 +128,24 @@ class AccountService:
         else:
             return EmptyPatch404()
 
-    async def account_create_card(self, iban: str) -> AccountView | EmptyPost400 | EmptyPost404 | EmptyError503:
+    async def account_create_card(self, iban: str) -> AccountView | EmptyPost400 | EmptyPost403 | EmptyPost404 | EmptyError503:
         if not validate_iban(iban):
             return EmptyPost400()
-        
+ 
         acc = await self.repo.find_account_by_iban(iban)
         if not acc:
             return EmptyPost404()
+        
+        # todo poner bien los limites de tarjetas
+        subscription_limits = {
+            "free": 3,
+            "gold": 4,
+            "premium": 5
+        }
+        limit = subscription_limits.get(acc.subscription, 0)
+        
+        if len(acc.cards) >= limit:
+            return EmptyPost403()
         
         res = await create_card(CreateCardRequest(cardholderName=acc.name))
         

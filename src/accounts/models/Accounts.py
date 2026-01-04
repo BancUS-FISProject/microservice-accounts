@@ -21,6 +21,13 @@ class AccountCreate(BaseModel):
     name: str
     email: str
     subscription: str
+    
+class AccountAuthCreate(BaseModel):
+    name: str
+    email: str
+    password: str
+    phoneNumber: str
+    subscription: str
 
 class AccountUpdateBalance(BaseModel):
     balance: float

@@ -20,10 +20,17 @@ class Settings(BaseSettings):
     REDIS_PORT: int = 6379
     REDIS_AVAILABLE: bool = False
     
+    # Auth microservice config
+    #AUTH_MICROSERVICE_BASE_URL: str = "http://microservice-user-auth:3000"
+    AUTH_MICROSERVICE_BASE_URL: str = "http://localhost:3000"
+    AUTH_MICROSERVICE_CREATE_USER_ENDPOINT: str = "/v1/users"
+    AUTH_BREAKER_FAILS: int = 3
+    AUTH_BREAKER_TIMEOUT: int = 30
+    
     # Cards microservice config
     CARD_MICROSERVICE_BASE_URL: str = "http://cards-microservice:8000"
     CARD_MICROSERVICE_CREATE_CARD_ENDPOINT: str = "/v1/cards"
-    CARD_MICROSERVICE_DELETE_CARD_ENDPOINT: str = "/v1/cards/pan"  #ADD PAN at the end
+    CARD_MICROSERVICE_DELETE_CARD_ENDPOINT: str = "/v1/cards/pan"  # ADD PAN at the end
     CARD_BREAKER_FAILS: int = 3
     CARD_BREAKER_TIMEOUT: int = 30
     

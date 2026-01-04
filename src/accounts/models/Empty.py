@@ -50,6 +50,11 @@ class EmptyPatch403(BaseModel):
     Forbidden Operation - Not sufficient funds
     """
     pass
+class EmptyPost403(BaseModel):
+    """
+    Forbidden Operation — Too many cards
+    """
+    pass
 
 class EmptyGet404(BaseModel):
     """
