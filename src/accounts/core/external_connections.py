@@ -33,7 +33,7 @@ async def init_db_client():
             settings.MONGO_CONNECTION_STRING,
             maxPoolSize=100,
             minPoolSize=10,
-            timeoutMS=5000
+            timeoutMS=15000
             )
         await db_client.admin.command('ping')
         
