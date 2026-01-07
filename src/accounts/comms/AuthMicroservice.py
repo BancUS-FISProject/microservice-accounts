@@ -21,3 +21,12 @@ async def create_user_call(user_auth_create: CreaterAuthUser) -> None:
             )
         
         response.raise_for_status()
+        
+async def delete_user_call(iban: str) -> None:
+    async with httpx.AsyncClient() as client:
+        response = await client.delete(
+            f"{settings.AUTH_MICROSERVICE_BASE_URL}{settings.AUTH_MICROSERVICE_DELETE_USER_ENDPOINT}/{iban}",
+            timeout=10.0
+            )
+        
+        response.raise_for_status()

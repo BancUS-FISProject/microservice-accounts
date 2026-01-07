@@ -11,7 +11,7 @@ def validate_email(email: str) -> bool:
         return False
     
 def validate_subscription(subscription: str) -> bool:
-    subscriptions = ["Free"]
+    subscriptions = ["basico", "premium", "pro"]
     
     if subscription in subscriptions:
         return True

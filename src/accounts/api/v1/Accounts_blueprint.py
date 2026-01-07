@@ -10,7 +10,7 @@ from ...models.Auth import CreaterAuthUser
 from ...models.Cards import DeleteCardRequest
 from ...models.Empty import EmptyGet404, EmptyPatch400, EmptyPatch403, EmptyPatch404, EmptyPost400, \
     EmptyPost404, EmptyError503, EmptyDelete204, EmptyGet400, EmptyDelete400, EmptyDelete404, EmptyDelete200, \
-    EmptyPatch204, EmptyPost403
+    EmptyPatch204, EmptyPost403, EmptyForbidden403
 
 from ...services.Accounts_service import AccountService
 from ...services import Auth_service
@@ -34,13 +34,12 @@ async def create_account(data: AccountAuthCreate):
     service = AccountService()
     data_account = AccountCreate(name=data.name, email=data.email, subscription=data.subscription)
     res = await service.create_new_account(data_account)
-    if isinstance(res, EmptyPost404):
+    
+    if isinstance(res, EmptyPost400):
         abort(400, description="Bad Request")
-    
-    # TODO AÑADIR EL IBAN, NO PUEDE CREARLO AUTH
-    auth_create = CreaterAuthUser(email=res.email, name=res.name, password=data.password, phoneNumber=data.phoneNumber)
+        
+    auth_create = CreaterAuthUser(iban=res.iban, email=res.email, name=res.name, password=data.password, phoneNumber=data.phoneNumber)
     res2 = await Auth_service.create_user(auth_create)
-    
     
     if isinstance(res2, EmptyError503):
         await service.delete_account(res.iban)
@@ -54,14 +53,15 @@ async def create_account(data: AccountAuthCreate):
 @document_response(EmptyGet404, 404)
 @tag(["v1"])
 async def view_account(iban: str):
-    auth_header = request.headers.get('Authorization')
+    # Commented because transfers needs to get the dest funds (I don't know why) to send money.
+    """auth_header = request.headers.get('Authorization')
     if not auth_header:
         return jsonify({"error": "Falta el header Authorization"}), 401
     _, token = auth_header.split(" ")
     jwt_data = decode_jwt(token)
     jwt_iban = jwt_data.get('iban')
     if jwt_iban != iban:
-        abort(403, description="Unauthorized access")
+        abort(403, description="Unauthorized access")"""
     
     service = AccountService()
     res = await service.get_account_by_iban(iban)
@@ -103,6 +103,10 @@ async def update_account(iban: str):
     
     service = AccountService()
     
+    acc_data = await service.get_account_by_iban(iban)
+    if acc_data.isBlocked:
+        abort(403, description="Forbidden Operation - Blocked Account")
+    
     # Validate JSON here
     raw_data = await request.get_json()
     if raw_data is None:
@@ -121,6 +125,10 @@ async def update_account(iban: str):
 @tag(["v1"])
 async def update_account_balance(iban: str, currency: str):
     service = AccountService()
+    
+    acc_data = await service.get_account_by_iban(iban)
+    if acc_data.isBlocked:
+        abort(403, description="Forbidden Operation - Blocked Account")
     
     # Validate JSON here
     raw_data = await request.get_json()
@@ -154,6 +162,10 @@ async def delete_account(iban: str):
     if jwt_iban != iban:
         abort(403, description="Unauthorized access")
     
+    res2 = await Auth_service.delete_user(iban)
+    if isinstance(res2, EmptyError503):
+        abort(503, description="Auth microservice is unavailable")
+        
     service = AccountService()
     res = await service.delete_account(iban)
     
@@ -229,6 +241,11 @@ async def create_card_account(iban: str):
         abort(403, description="Unauthorized access")
     
     service = AccountService(jwt=auth_header)
+    
+    acc_data = await service.get_account_by_iban(iban)
+    if acc_data.isBlocked:
+        abort(403, description="Forbidden Operation - Blocked Account")
+    
     res = await service.account_create_card(iban)
     if isinstance(res, EmptyPost400):
         abort(400, description="Bad Request")
@@ -258,6 +275,11 @@ async def delete_card_account(iban: str, data: DeleteCardRequest):
         abort(403, description="Unauthorized access")
     
     service = AccountService(jwt=auth_header)
+    
+    acc_data = await service.get_account_by_iban(iban)
+    if acc_data.isBlocked:
+        abort(403, description="Forbidden Operation - Blocked Account")
+    
     res = await service.account_delete_card(iban, data)
     if isinstance(res, EmptyPost400):
         abort(400, description="Bad Request")

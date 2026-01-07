@@ -24,6 +24,7 @@ class Settings(BaseSettings):
     #AUTH_MICROSERVICE_BASE_URL: str = "http://microservice-user-auth:3000"
     AUTH_MICROSERVICE_BASE_URL: str = "http://localhost:3000"
     AUTH_MICROSERVICE_CREATE_USER_ENDPOINT: str = "/v1/users"
+    AUTH_MICROSERVICE_DELETE_USER_ENDPOINT: str = "/v1/users"
     AUTH_BREAKER_FAILS: int = 3
     AUTH_BREAKER_TIMEOUT: int = 30
     
@@ -33,6 +34,7 @@ class Settings(BaseSettings):
     CARD_MICROSERVICE_DELETE_CARD_ENDPOINT: str = "/v1/cards/pan"  # ADD PAN at the end
     CARD_BREAKER_FAILS: int = 3
     CARD_BREAKER_TIMEOUT: int = 30
+    SUBSCRIPTION_CARD_LIMITS: dict[str, int]= {"basico": 1,"premium": 5,"pro": 9999999}
     
     # Currencies microservice config
     CURRENCIES_MICROSERVICE_BASE_URL: str = "http://currecies-microservice:8000"

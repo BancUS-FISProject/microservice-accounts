@@ -56,6 +56,12 @@ class EmptyPost403(BaseModel):
     """
     pass
 
+class EmptyForbidden403(BaseModel):
+    """
+    Forbidden Operation — Account Blocked
+    """
+    pass
+
 class EmptyGet404(BaseModel):
     """
     Account not found

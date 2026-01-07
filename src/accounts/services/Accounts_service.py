@@ -136,13 +136,7 @@ class AccountService:
         if not acc:
             return EmptyPost404()
         
-        # todo poner bien los limites de tarjetas
-        subscription_limits = {
-            "free": 3,
-            "gold": 4,
-            "premium": 5
-        }
-        limit = subscription_limits.get(acc.subscription, 0)
+        limit = settings.SUBSCRIPTION_CARD_LIMITS.get(acc.subscription, 0)
         
         if len(acc.cards) >= limit:
             return EmptyPost403()

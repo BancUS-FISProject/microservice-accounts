@@ -8,7 +8,7 @@ from ..models.Cards import CreateCardRequest, CreateCardResponse, DeleteCardRequ
 logger = getLogger()
 logger.setLevel(settings.LOG_LEVEL)
 
-async def create_card_call(jwt, card_data: CreateCardRequest) -> CreateCardResponse:
+async def create_card_call(card_data: CreateCardRequest, jwt) -> CreateCardResponse:
     async with httpx.AsyncClient() as client:
         payload = card_data.model_dump(by_alias=True)
         
@@ -29,7 +29,7 @@ async def create_card_call(jwt, card_data: CreateCardRequest) -> CreateCardRespo
         
         return CreateCardResponse(**response_data)
     
-async def delete_card_call(jwt, card_data: DeleteCardRequest) -> DeleteCardResponse:
+async def delete_card_call(card_data: DeleteCardRequest, jwt) -> DeleteCardResponse:
     async with httpx.AsyncClient() as client:
         payload = card_data.model_dump(by_alias=True)
         
