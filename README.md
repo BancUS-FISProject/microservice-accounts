@@ -25,7 +25,7 @@ El proyecto se presenta con la arquitectura base y los microservicios totalmente
   * **El backend debe ser una API REST tal como se ha visto en clase implementando al menos los métodos GET, POST, PUT y DELETE y devolviendo un conjunto de códigos de estado adecuado.** --> microservice cards/routes/cards.js (incluye swagger también)
   * **La API debe tener un mecanismo de autenticación.** --> se realiza en la API GATEWAY
   * **Debe tener un frontend que permita hacer todas las operaciones de la API.** --> [Frontend común](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/OverviewPage.jsx), [Frontend Cards](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/CardsPage.jsx), [Frontend Accounts](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/AccountsPage.jsx)
-  * **Debe estar desplegado y ser accesible desde la nube (ya sea de forma individual o como parte de la aplicación).** --> **AÑADIR ENLACE**
+  * **Debe estar desplegado y ser accesible desde la nube (ya sea de forma individual o como parte de la aplicación).** --> [API GATEWAY](https://68.221.252.242:10000/v1/user-auth/health). La dirección dejará de ser accesible tras la presentación del proyecto.
   * **La API que gestione el recurso también debe ser accesible en una dirección bien versionada.** --> http://localhost:3000/v1/cards/...
   * **Se debe tener una documentación de todas las operaciones de la API incluyendo las posibles peticiones y las respuestas recibidas** --> OpenApi Specification con Swagger [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/api/v1/Accounts_blueprint.py), [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/routes/cards.js)
   * **Debe tener persistencia utilizando MongoDB u otra base de datos no SQL.** --> Uso de [MongoDB Atlas](https://www.mongodb.com/es/lp/cloud/atlas/try4?utm_source=google&utm_campaign=search_gs_pl_evergreen_atlas_core_prosp-brand_gic-null_emea-es_ps-all_desktop_es-es_lead&utm_term=mongo&utm_medium=cpc_paid_search&utm_ad=p&utm_ad_campaign_id=20378068766&adgroup=154980291241&cq_cmp=20378068766&gad_source=1&gad_campaignid=20378068766&gbraid=0AAAAADQ14003vVzNv2F2yoQf9TkSi2dB4&gclid=Cj0KCQiA6sjKBhCSARIsAJvYcpOkznc7sPIf-SOd9ZHtvnsz4J5YW0aLHTNyrmRCJkFNWmpFl-ndkrwaAkwNEALw_wcB)
@@ -36,7 +36,7 @@ El proyecto se presenta con la arquitectura base y los microservicios totalmente
   * **Debe haber pruebas de componente implementadas en Javascript para el código del backend utilizando Jest o similar. Como norma general debe haber tests para todas las funciones del API no triviales de la  aplicación. Probando tanto escenarios positivos como negativos. Las pruebas deben ser tanto in-process como out-of-process**. --> Uso de Jest. Tests internos [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/tests/cards.api.test.js) [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/tests/test_database.py), Tests externos [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/tests/cards.external.test.js), [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/tests/test_api_v1.py)
 
 * **MICROSERVICIO AVANZADO QUE GESTIONE UN RECURSO (6):**
-  * **Implementar un frontend con rutas y navegación.** --> Frontend común (BancUS-frontend/src/components/OverviewPage.jsx), Frontend individual: Cards (BancUS-frontend/src/components/CardsPage.jsx), [Accounts]()
+  * **Implementar un frontend con rutas y navegación.** --> [Frontend común](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/OverviewPage.jsx), [Frontend individual: Cards](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/CardsPage.jsx), [Accounts](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/AccountsPage.jsx)
   * **Implementar cachés o algún mecanismo para optimizar el acceso a datos de otros recursos.** --> Uso de redis para todos los microservicios. Redis cards (microservice cards/redisClient.js)
   * **Consumir alguna API externa (distinta de las de los grupos de práctica) a través del backend o algún otro tipo de almacenamiento de datos en cloud como Amazon S3** --> Microservice-currencies
   * Implementar el patrón “rate limit” al hacer uso de servicios externos --> Uso de scheduler de peticiones para ajustarse a la cuota mensual al máximo en [Microservicio Currencies](https://github.com/BancUS-FISProject/microservice-currencies/blob/master/src/main/java/com/bankUS/microservice_currencies/schedulers/CacheScheduler.java)
@@ -48,10 +48,10 @@ El proyecto se presenta con la arquitectura base y los microservicios totalmente
   * **Tener un frontend común que integre los frontends de cada uno de los microservicios. Cada pareja debe ocuparse, al menos, de la parte específica de su microservicio en el frontend común.** --> Realizado.
   * **Permitir la suscripción del usuario a un plan de precios y adaptar automáticamente la funcionalidad de la aplicación según el plan de precios seleccionado.** --> Puede realizarse en la página principal (si no se ha realizado la autenticación - [Frontend Común](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/OverviewPage.jsx)) y en la página de [pricing](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/pages/PricingPage.jsx) 
 * **APLICACIÓN BASADA EN MICROSERVICIOS AVANZADA (6):**
-  * **Implementar un mecanismo de autenticación basado en JWT o equivalente.** --> Como se acordó en el último seguimiento, al ser realizado por todas las parejas, esta característica se considera de APLICACIÓN BASADA EN MICROSERVICIOS AVANZADA. **ALVARO PON ENLACE AL JWT AQUÍ**
+  * **Implementar un mecanismo de autenticación basado en JWT o equivalente.** --> Como se acordó en el último seguimiento, al ser realizado por todas las parejas, esta característica se considera de APLICACIÓN BASADA EN MICROSERVICIOS AVANZADA.
   * **Incluir en el plan de precios límites de uso y aplicarlos automáticamente según la suscripción del usuario.** --> Se limitan las tarjetas segun el plan del ususario - [Microservice Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Accounts_service.py)
   * **Hacer uso de un API Gateway con funcionalidad avanzada como un mecanismo de throttling o de autenticación.** --> [API Gateway](https://github.com/BancUS-FISProject/api-gateway/blob/main/nginx.conf)
-  * **Cualquier otra extensión a la aplicación basada en microservicios básica acordada previamente con el profesor** --> Sistema de logs comunes con Grafana (ver en contenedor de Grafana) **HAY OTRA FORMA DE VERLO ÁLVARO??**
+  * **Cualquier otra extensión a la aplicación basada en microservicios básica acordada previamente con el profesor** --> Sistema de logs comunes con [Grafana](http://70.156.225.61/)
 
 ### Análisis justificativo de la suscripción óptima de las APIs del proyecto
 
@@ -214,20 +214,20 @@ Para evitar fallos en cascada cuando un microservicio dependiente (Cards o Curre
 
 * **Implementación (Accounts):** Se ha aplicado el **Patrón Circuit Breaker**. Si el microservicio de Divisas falla repetidamente, el sistema deja de enviar peticiones temporalmente y devuelve un error controlado, permitiendo que el servicio externo se recupere.
 * **Gestión de Conexiones (Network Watcher):** Se ha desarrollado un *Network Watcher* que monitoriza los servicios externos (cache redis y base de datos) para comporbar su estado. Si se pierde la conexion con alguno, el sistema intenta reconectar. En el caso de la base de datos principal, se intenta reconectar 5 veces antes de que caiga el microservicio.
-* **Evidencia en código:** [Ver implementación del Circuit Breaker / Network Watcher]([PON_AQUI_EL_LINK_A_GITHUB])
+* **Evidencia en código:** [Circuit Breaker](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Cards_service.py), [Network Watcher](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/core/external_connections.py)
 
 ### 6.2. Estrategia de Caché Multinivel (Rendimiento y Costes)
 Se ha implementado una estrategia de caché híbrida para reducir la latencia y, crucialmente, minimizar el consumo de APIs externas de pago.
 
 * **Caché Distribuida (Redis):** Ambos microservicios (Accounts y Currencies) utilizan Redis como primera capa de caché para datos de acceso frecuente.
 * **Caché Local (Fallback):** En el microservicio de **Accounts** y **Currencies**, se ha implementado un sistema de alta disponibilidad: si Redis se cae, el sistema conmuta automáticamente a una caché en memoria local del contenedor, garantizando que el servicio no se detenga por un fallo en la infraestructura de caché. Esto incrementaria el uso de recursos y la api externa ya que cada contenedor debe gestionar su propia cache.
-* **Evidencia en código:** [Ver lógica de caché Redis/Local en Accounts]([PON_AQUI_EL_LINK_A_GITHUB])
+* **Evidencia en código:** [Ver lógica de caché Redis/Local en Accounts](https://github.com/BancUS-FISProject/microservice-accounts/tree/master/src/accounts/db)
 
 ### 6.3. Optimización de Recursos Externos (Gestión de Cuotas API)
 El microservicio de **Currencies** consume la API externa "Currency Converter Pro1" de RapidAPI. Dado que el plan gratuito tiene un límite de 3000 peticiones/mes, se ha diseñado una lógica de ahorro estricta.
 
 * 3000 peticiones mes equivalen aprox. a una petición cada 15-20 minutos. El sistema cachea los valores de las divisas en Redis con un TTL (Time To Live) ajustado a este intervalo. Si se solicita un cambio de divisa (ej. EUR -> USD) y el dato en caché es reciente, **no se consume cuota de la API externa**.
-* **Evidencia en código:** [Ver servicio de Currencies y configuración de TTL]([PON_AQUI_EL_LINK_A_GITHUB_JAVA])
+* **Evidencia en código:** [Ver servicio de Currencies y configuración de TTL]()
 
 ### 6.4. Observabilidad y Monitorización (Health Checks & Logs)
 Para facilitar el despliegue en orquestadores como Kubernetes y la depuración, se han estandarizado los mecanismos de salud y trazas.
