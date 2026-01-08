@@ -113,19 +113,18 @@ El sistema se compone de los siguientes elementos. Se marcan en **negrita** los 
 
 1.  **API Gateway:** Punto único de entrada. Protege la red interna y distribuye las peticiones.
 2.  **Microservicio Accounts (Python/Quart):**
+    ![Estructura Microservicio Cuentas](assets/Accounts%20full.png)
     * Encargado de la persistencia y lógica de las cuentas.
     * Maneja la validación estricta de datos (Pydantic).
     * Orquesta llamadas a *Cards* y *Currencies*.
 3.  **Microservicio Currencies (Java/Spring Boot):**
+    ![Estructura Microservicio Cuentas](assets/Currencies%20st%20full.png)
     * Provee servicios de conversión de moneda.
     * Integra proveedores externos (RapidAPI).
 4.  **Microservicio Cards (Node.js/Express)** 
     * gestión del recurso tarjeta (CRUD), estados (active/frozen) y operaciones asociadas a tarjetas.
     * Recibe peticiones de *Accounts*, *Transfers* y *anti-fraud*
 5.  **Frontend común (React/Vite):** interfaz unificada con rutas y navegación. Incluye páginas específicas para cada microservicio
-
-
-![Diagrama de Arquitectura de Cards](![alt text](image.png))
 
 ## 4. Consmo
 
