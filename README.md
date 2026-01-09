@@ -3,12 +3,12 @@
 | **Autores**                | **Microservicios Implementados**                                              |
 |:---------------------------|:------------------------------------------------------------------------------|
 | **Álvaro Vigara Suárez**   | API Gateway, Microservicio Accounts (Python), Microservicio Currencies (Java) |
-| **Pablo Medinilla Mejías** | Microservicio cards, Todo el Frontend común                                   |
+| **Pablo Medinilla Mejías** | Microservicio cards, Frontend Común completo
 ---
 
 ## 1. Nivel de Acabado
 
-La entrega se plantea con el microservicio Cards completamente funcional y con integración en la arquitectura global (API Gateway + resto de microservicios), además del frontend común con rutas, navegación y pantallas que permiten ejecutar todas las operaciones relevantes del API de Cards.
+La entrega se plantea con todos los microservicios completamente funcionales integrados en la arquitectura global (API Gateway + microservicios), acompañado de un frontend común desarrollado en React que permite operar de forma íntegra todas las funcionalidades expuestas por cada microservicio, como la visualización e interacción con los dominios del sistema (Accounts, Transactions, Payments, etc.).
 
 **Acabado:** **10**, se incluyen  6 características del microservicio avanzado implementados y 4 características de la aplicación basada en microservicios avanzada implementados. 
 
@@ -18,40 +18,46 @@ El proyecto se presenta con la arquitectura base y los microservicios totalmente
 * **Microservicio Accounts:** Funcionalidad completa CRUD, gestión de estados (bloqueo/desbloqueo) y endpoints dependientes de otros microservicios (Cards/Currencies).
 * **Microservicio Currencies:** Actúa como adaptador/wrapper consumiendo la API externa para realizar conversiones reales, además de controlar el consumo de la API externa.
 * **Mircroservcio Cards:** Funcionalidad completa CRUD, gestión de estados (active/frozen)
+* **Mircroservcio Transfers:** Funcionalidad completa, gestiona las transferencias realizadas en la aplicación, ofreciendo recursos a otros microservicios como el de pagos programados y al mismo tiempo dependiente de otros como el microservicio de cuentas. Se permiten revertir las transferencias y se enfoca en la trazabilidad de operaciones independientemente de su estado.
+* **Microservicio User Auth:** Alta/edición de usuarios, login con CAPTCHA, emisión de JWT con revocación (lista negra) y validación centralizada de tokens para el resto de microservicios.
+* **Microservicio Anti-fraud:** Reglas de detección de fraude, creación/gestión de alertas y bloqueo proactivo de cuentas mediante circuit breaker hacia Accounts.
+* **Microservicio Scheduled Payments:** Funcionalidad completa, realiza transferencias en momentos programados utilizando una sincronización por NTP y algunas limitaciones tipo Rate Limit para asegurar un correcto funcionamiento.
+* **Microservicio Notifications:** Funcionalidad completa, se encarga de informar a los usuarios sobre distintos eventos relevantes del sistema utilizando SendGrid enviando mails a los distintos usuarios.
+* **Microservicio Bank Statements:** Gestión completa de estados de cuenta bancarios con generación automática mensual mediante cron job, generación de estado de cuneta del mes actual consumiendo transacciones externas; muestra al cliente un balance de sus gastos.
 
 ### Características implementadas
 
 * **MICROSERVICIO BÁSICO QUE GESTIONE UN RECURSO** completo: La entrega incluye el microservicio Cards operativo en la arquitectura de microservicios, integrado con el API Gateway, persistencia NoSQL, autenticación centralizada, documentación de API, dockerización, y un frontend común con rutas y navegación para operar el recurso tarjeta desde la interfaz.
-  * **El backend debe ser una API REST tal como se ha visto en clase implementando al menos los métodos GET, POST, PUT y DELETE y devolviendo un conjunto de códigos de estado adecuado.** --> microservice cards/routes/cards.js (incluye swagger también)
-  * **La API debe tener un mecanismo de autenticación.** --> se realiza en la API GATEWAY
+  * **El backend debe ser una API REST tal como se ha visto en clase implementando al menos los métodos GET, POST, PUT y DELETE y devolviendo un conjunto de códigos de estado adecuado.** --> [microservice cards/routes/cards.js](https://github.com/BancUS-FISProject/microservice-cards/blob/master/routes/cards.js) (incluye swagger también)
+  * **La API debe tener un mecanismo de autenticación.** --> se realiza en la API Gateway
   * **Debe tener un frontend que permita hacer todas las operaciones de la API.** --> [Frontend común](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/OverviewPage.jsx), [Frontend Cards](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/CardsPage.jsx), [Frontend Accounts](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/AccountsPage.jsx)
-  * **Debe estar desplegado y ser accesible desde la nube (ya sea de forma individual o como parte de la aplicación).** --> [API GATEWAY](https://68.221.252.242:10000/v1/user-auth/health). La dirección dejará de ser accesible tras la presentación del proyecto.
+  * **Debe estar desplegado y ser accesible desde la nube (ya sea de forma individual o como parte de la aplicación).** --> [enlace a frontend en la nube](https://nonlitigious-trudi-isochronally.ngrok-free.dev/)
   * **La API que gestione el recurso también debe ser accesible en una dirección bien versionada.** --> http://localhost:3000/v1/cards/...
-  * **Se debe tener una documentación de todas las operaciones de la API incluyendo las posibles peticiones y las respuestas recibidas** --> OpenApi Specification con Swagger [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/api/v1/Accounts_blueprint.py), [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/routes/cards.js)
+  * **Se debe tener una documentación de todas las operaciones de la API incluyendo las posibles peticiones y las respuestas recibidas** --> OpenApi Specification con Swagger [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/api/v1/Accounts_blueprint.py), [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/routes/cards.js) (se muestra en los vídeos de la entrega)
   * **Debe tener persistencia utilizando MongoDB u otra base de datos no SQL.** --> Uso de [MongoDB Atlas](https://www.mongodb.com/es/lp/cloud/atlas/try4?utm_source=google&utm_campaign=search_gs_pl_evergreen_atlas_core_prosp-brand_gic-null_emea-es_ps-all_desktop_es-es_lead&utm_term=mongo&utm_medium=cpc_paid_search&utm_ad=p&utm_ad_campaign_id=20378068766&adgroup=154980291241&cq_cmp=20378068766&gad_source=1&gad_campaignid=20378068766&gbraid=0AAAAADQ14003vVzNv2F2yoQf9TkSi2dB4&gclid=Cj0KCQiA6sjKBhCSARIsAJvYcpOkznc7sPIf-SOd9ZHtvnsz4J5YW0aLHTNyrmRCJkFNWmpFl-ndkrwaAkwNEALw_wcB)
-  * **Deben validarse los datos antes de almacenarlos en la base de datos (por ejemplo, haciendo uso  de mongoose).**  --> Uso de pydantic en [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/tree/master/src/accounts/models), microservice cards/models/Card.js
+  * **Deben validarse los datos antes de almacenarlos en la base de datos (por ejemplo, haciendo uso  de mongoose).**  --> Uso de pydantic en [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/tree/master/src/accounts/models), Uso de modelo en [microservice cards ](https://github.com/BancUS-FISProject/microservice-cards/blob/master/models/Card.js)
   * **Debe haber definida una imagen Docker del proyecto**  --> [Microservicio Accounts](https://hub.docker.com/repository/docker/alvvigsua/microservice-accounts/general), [Microservice Currencies](https://hub.docker.com/repository/docker/alvvigsua/microservice-currencies/general), [Microservicio cards](https://hub.docker.com/repository/docker/pabmedmej/microservice-cards/general) 
-  * **Gestión del código fuente: El código debe estar subido a un repositorio de Github siguiendo Github Flow** --> [Proyecto](https://github.com/BancUS-FISProject), [Front-end](https://github.com/BancUS-FISProject/BancUS-frontend), [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts), [Microservicio Currencies](https://github.com/BancUS-FISProject/microservice-currencies), [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards), [API Gateway](https://github.com/BancUS-FISProject/api-gateway)
+  * **Gestión del código fuente: El código debe estar subido a un repositorio de Github siguiendo Github Flow** --> [Proyecto](https://github.com/BancUS-FISProject), [Front-end](https://github.com/BancUS-FISProject/BancUS-frontend), [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts), [Microservicio Currencies](https://github.com/BancUS-FISProject/microservice-currencies), [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards), [Microservicio Transfers](https://github.com/BancUS-FISProject/microservice-transfers), [Microservicio User Auth](https://github.com/BancUS-FISProject/microservice-user-auth), [Microservicio Anti-Fraud](https://github.com/BancUS-FISProject/microservice-anti-fraud), [API Gateway](https://github.com/BancUS-FISProject/api-gateway)
   * **Integración continua: El código debe compilarse, probarse y generar la imagen de Docker automáticamente usando GitHub Actions u otro sistema de integración continua en cada commit** --> Uso de Actions [Micorservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/.github/workflows/ci-cards.yml), [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/.github/workflows/cicd-test-docker-pipeline.yml)
   * **Debe haber pruebas de componente implementadas en Javascript para el código del backend utilizando Jest o similar. Como norma general debe haber tests para todas las funciones del API no triviales de la  aplicación. Probando tanto escenarios positivos como negativos. Las pruebas deben ser tanto in-process como out-of-process**. --> Uso de Jest. Tests internos [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/tests/cards.api.test.js) [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/tests/test_database.py), Tests externos [Microservicio Cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/tests/cards.external.test.js), [Microservicio Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/tests/test_api_v1.py)
 
 * **MICROSERVICIO AVANZADO QUE GESTIONE UN RECURSO (6):**
-  * **Implementar un frontend con rutas y navegación.** --> [Frontend común](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/OverviewPage.jsx), [Frontend individual: Cards](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/CardsPage.jsx), [Accounts](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/AccountsPage.jsx)
-  * **Implementar cachés o algún mecanismo para optimizar el acceso a datos de otros recursos.** --> Uso de redis para todos los microservicios. Redis cards (microservice cards/redisClient.js)
-  * **Consumir alguna API externa (distinta de las de los grupos de práctica) a través del backend o algún otro tipo de almacenamiento de datos en cloud como Amazon S3** --> Microservice-currencies
-  * Implementar el patrón “rate limit” al hacer uso de servicios externos --> Uso de scheduler de peticiones para ajustarse a la cuota mensual al máximo en [Microservicio Currencies](https://github.com/BancUS-FISProject/microservice-currencies/blob/master/src/main/java/com/bankUS/microservice_currencies/schedulers/CacheScheduler.java)
-  * **Implementar el patrón “circuit breaker” en las comunicaciones con otros servicios.** --> Uso de circuit breaker en [Microservicio Accounts - Conexion Currencies](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Currencies_service.py), [Microservicio Accounts - Conexion Cards](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Cards_service.py)
-  * Implementar mecanismos de gestión de la capacidad como throttling o feature toggles para rendimiento. --> Mecanismo de Throttling en [API Gateway](https://github.com/BancUS-FISProject/api-gateway/blob/main/nginx.conf), Feature Toggle de cache cuando esta disponible con redis en [Microservicio Accounts - Toggler; Linea 30](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Accounts_service.py), [Microservicio Accounts - Connection Monitor; Linea 86](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/core/external_connections.py)
+  * **Implementar un frontend con rutas y navegación.** --> [Frontend común](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/OverviewPage.jsx) , Frontend individual: [Cards](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/CardsPage.jsx) , [Accounts](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/AccountsPage.jsx)
+  * **Implementar cachés o algún mecanismo para optimizar el acceso a datos de otros recursos.** --> Uso de redis para todos los microservicios. [Redis cards](https://github.com/BancUS-FISProject/microservice-cards/blob/master/cache.js) 
+  * **Consumir alguna API externa (distinta de las de los grupos de práctica) a través del backend o algún otro tipo de almacenamiento de datos en cloud como Amazon S3** --> [Microservice-currencies](https://github.com/BancUS-FISProject/microservice-currencies)
+  * **Implementar el patrón “rate limit” al hacer uso de servicios externos** --> Uso de scheduler de peticiones para ajustarse a la cuota mensual al máximo en [Microservicio Currencies](https://github.com/BancUS-FISProject/microservice-currencies/blob/master/src/main/java/com/bankUS/microservice_currencies/schedulers/CacheScheduler.java)
+  * **Implementar el patrón “circuit breaker” en las comunicaciones con otros servicios.** --> Uso de circuit breaker en [Microservicio Accounts - Conexion Currencies](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Currencies_service.py), [Microservicio Accounts - Conexion Cards](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Cards_service.py), y en [Microservicio Anti-Fraud - Bloqueo de cuentas](https://github.com/BancUS-FISProject/microservice-anti-fraud/blob/master/src/anti-fraud/anti-fraud.service.ts)
+  * **Implementar mecanismos de gestión de la capacidad como throttling o feature toggles para rendimiento.** --> Mecanismo de Throttling en [API Gateway](https://github.com/BancUS-FISProject/api-gateway/blob/main/nginx.conf), Feature Toggle de cache cuando esta disponible con redis en [Microservicio Accounts - Toggler; Linea 30](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Accounts_service.py), [Microservicio Accounts - Connection Monitor; Linea 86](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/core/external_connections.py)
 
 * **APLICACIÓN BASADA EN MICROSERVICIOS BÁSICA:** Completo
   * **Interacción completa entre todos los microservicios de la aplicación integrando información. La integración debe realizarse a través del backend.** --> Realizado
   * **Tener un frontend común que integre los frontends de cada uno de los microservicios. Cada pareja debe ocuparse, al menos, de la parte específica de su microservicio en el frontend común.** --> Realizado.
   * **Permitir la suscripción del usuario a un plan de precios y adaptar automáticamente la funcionalidad de la aplicación según el plan de precios seleccionado.** --> Puede realizarse en la página principal (si no se ha realizado la autenticación - [Frontend Común](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/components/OverviewPage.jsx)) y en la página de [pricing](https://github.com/BancUS-FISProject/BancUS-frontend/blob/master/src/pages/PricingPage.jsx) 
 * **APLICACIÓN BASADA EN MICROSERVICIOS AVANZADA (6):**
-  * **Implementar un mecanismo de autenticación basado en JWT o equivalente.** --> Como se acordó en el último seguimiento, al ser realizado por todas las parejas, esta característica se considera de APLICACIÓN BASADA EN MICROSERVICIOS AVANZADA.
+  * **Implementar un mecanismo de autenticación basado en JWT o equivalente.** --> Como se acordó en el último seguimiento, al ser realizado por todas las parejas, esta característica se considera de APLICACIÓN BASADA EN MICROSERVICIOS AVANZADA. Implementado en el [Microservicio User Auth (login/validación JWT)](https://github.com/BancUS-FISProject/microservice-user-auth/blob/master/src/auth/auth.controller.ts) y gestionado desde el API Gateway.
   * **Incluir en el plan de precios límites de uso y aplicarlos automáticamente según la suscripción del usuario.** --> Se limitan las tarjetas segun el plan del ususario - [Microservice Accounts](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Accounts_service.py)
   * **Hacer uso de un API Gateway con funcionalidad avanzada como un mecanismo de throttling o de autenticación.** --> [API Gateway](https://github.com/BancUS-FISProject/api-gateway/blob/main/nginx.conf)
-  * **Cualquier otra extensión a la aplicación basada en microservicios básica acordada previamente con el profesor** --> Sistema de logs comunes con [Grafana](http://70.156.225.61/)
+  * **Cualquier otra extensión a la aplicación basada en microservicios básica acordada previamente con el profesor** --> Sistema de logs comunes con Grafana (ver en contenedor de Grafana 70.156.225.61) 
 
 ### Análisis justificativo de la suscripción óptima de las APIs del proyecto
 
@@ -111,22 +117,53 @@ El diseño separa la lógica de negocio principal (cuentas y operaciones) de ser
 ## 3. Descomposición y Arquitectura
 El sistema se compone de los siguientes elementos. Se marcan en **negrita** los desarrollados por esta parte del equipo:
 
-1.  **API Gateway:** Punto único de entrada. Protege la red interna y distribuye las peticiones.
+1.  **API Gateway:**
+    * Punto único de entrada. Protege la red interna y distribuye las peticiones.
 2.  **Microservicio Accounts (Python/Quart):**
-    ![Estructura Microservicio Cuentas](assets/Accounts%20full.png)
     * Encargado de la persistencia y lógica de las cuentas.
     * Maneja la validación estricta de datos (Pydantic).
     * Orquesta llamadas a *Cards* y *Currencies*.
 3.  **Microservicio Currencies (Java/Spring Boot):**
-    ![Estructura Microservicio Cuentas](assets/Currencies%20st%20full.png)
     * Provee servicios de conversión de moneda.
     * Integra proveedores externos (RapidAPI).
 4.  **Microservicio Cards (Node.js/Express)** 
     * gestión del recurso tarjeta (CRUD), estados (active/frozen) y operaciones asociadas a tarjetas.
     * Recibe peticiones de *Accounts*, *Transfers* y *anti-fraud*
-5.  **Frontend común (React/Vite):** interfaz unificada con rutas y navegación. Incluye páginas específicas para cada microservicio
+5. **Microservicio Transfers (Python/Quart):**
+    * Gestiona la funcionalidad de las transferencias.
+    * Maneja la validación estricta de datos (Pydantic).
+    * Realiza peticiones a una API Externa (TimeAPI) y al microservicio de cuentas para su funcionamiento base. (También llama a otros microservicios como el de autenticación o notificaciones).
+6.  **Microservicio User Auth (NestJS/Express):**
+    * Gestiona altas/bajas/edición de usuarios (MongoDB).
+    * Autentica con CAPTCHA, genera tokens JWT, valida/revoca tokens (lista negra) y notifica inicio de sesión.
+7.  **Microservicio Anti-Fraud (NestJS/Express):**
+    * Reglas de detección de riesgo sobre transacciones (importe, histórico, destinos).
+    * Gestiona alertas de fraude (crear, listar, actualizar, eliminar) y bloquea cuentas vía Accounts con circuit breaker y timeout configurables.
+8.  **Microservicio Scheduled Payments (Python/Quart):**
+    * Realiza transferencias en momentos programados utilizando una sincronización por NTP y algunas limitaciones tipo Rate Limit para asegurar un correcto funcionamiento. 
+9.  **Microservicio Notifications (Python/Quart):** 
+    * Se encarga de informar a los usuarios sobre distintos eventos relevantes del sistema utilizando SendGrid enviando mails a los distintos usuarios. 
+10.  **Microservicio Bank Statements (Node.js/Express):**
+    * Gestión de estados de cuenta bancarios (CRUD).
+    * Generación automática mensual con cron job (día 1 de cada mes las 00:01).
+    * Generación de estado decuenta del mes actual consumiendo microservicio de transacciones.
+    * Visualización gráfica de balances.
+11.  **Frontend común (React/Vite):**
+    * Interfaz unificada con rutas y navegación. Incluye páginas específicas para cada microservicio
 
-## 4. Consmo
+## Diagrama del microservicio Accounts
+![Estructura Microservicio Cuentas](diagramas/Currencies%20st%20full.png)
+
+## Diagrama del microservicio Currencies
+![Estructura Microservicio Cuentas](diagramas/Accounts%20full.png)
+
+## Diagrama del microservicio cards
+
+![Operaciones del modelo de cards](diagramas/diagrama-1.png)
+
+![Operaciones del modelo de cards](diagramas/diagrama-2.png)
+
+## 4. Consumo
 
 ### 4.1. Customer Agreement (SLA e Interfaz)
 
@@ -194,6 +231,25 @@ Desarrollado con `Quart` y `Quart-Schema` para soporte asíncrono y documentaci�
 | `POST`   | `/card/<iban>`                 | Solicita creación de tarjeta asociada.        | `200`, `404`, `503` (Error Cards)                                  |
 | `DELETE` | `/card/<iban>`                 | Elimina tarjeta asociada.                     | `200`, `404`, `503` (Error Cards)                                  |
 
+### Microservicio Cards (Node.js / Express)
+Desarrollado con `Express.js`, persistencia en MongoDB, uso de Redis como caché y documentación automática mediante **Swagger / OpenAPI**.
+
+**Prefijo:** `/v1/cards`
+
+| Método   | Endpoint                               | Descripción                                                   | Códigos de Respuesta                     |
+|:---------|:----------------------------------------|:--------------------------------------------------------------|:-----------------------------------------|
+| `GET`    | `/`                                     | Lista todas las tarjetas registradas                          | `200`, `500`                             |
+| `GET`    | `/holder/<cardholderName>`              | Lista todas las tarjetas de un usuario por nombre             | `200`, `404`, `500`                      |
+| `GET`    | `/<id>`                                 | Obtiene una tarjeta por su identificador global (MongoDB)     | `200`, `404`, `500`                      |
+| `POST`   | `/`                                     | Crea una tarjeta para un usuario                              | `201`, `400`, `500`                      |
+| `PUT`    | `/status/<pan>/<cardFreeze>`            | Bloquea o desbloquea una tarjeta por PAN                      | `200`, `400`, `404`, `500`               |
+| `PUT`    | `/<cardholderName>/<id>`                | Actualiza una tarjeta por titular e identificador             | `200`, `400`, `404`, `500`               |
+| `PUT`    | `/<id>`                                 | Actualiza una tarjeta por identificador global                | `200`, `400`, `404`, `500`               |
+| `DELETE` | `/pan/<PAN>`                             | Elimina una tarjeta a partir de su PAN                        | `200`, `404`, `500`                      |
+| `DELETE` | `/<cardholderName>/<id>`                | Elimina una tarjeta por titular e identificador               | `200`, `404`, `500`                      |
+| `DELETE` | `/<id>`                                 | Elimina una tarjeta por identificador global                  | `200`, `404`, `500`                      |
+
+
 ### Microservicio Currencies (Java / Spring Boot)
 Desarrollado con Spring Boot.
 **Prefijo:** `/v1/currency`
@@ -201,6 +257,63 @@ Desarrollado con Spring Boot.
 | Método | Endpoint   | Parámetros (Query)     | Descripción                                                             |
 |:-------|:-----------|:-----------------------|:------------------------------------------------------------------------|
 | `GET`  | `/convert` | `from`, `to`, `amount` | Realiza la conversión de divisas utilizando el valor actual de mercado. |
+
+### Microservicio Transfers (Python / Quart)
+| Método   | Endpoint                | Descripción                                                                                               | Payload / Params         | Respuestas                                                 |
+| :------- | :---------------------- | :-------------------------------------------------------------------------------------------------------- | :----------------------- | :--------------------------------------------------------- |
+| `POST`   | `/`                     | **Crear Transacción:** Inicia una transferencia de fondos. Valida saldo y actualiza cuentas atómicamente. | JSON `TransactionCreate` | `202` (Éxito), `400` (Error Saldo), `503` (Error Accounts) |
+| `GET`    | `/<iban>`               | **Detalle:** Obtiene información completa de una transacción por su IBAN.                                 | IBAN en URL              | `200` (JSON `TransactionView`), `404`                      |
+| `GET`    | `/user/<iban>/sent`     | **Historial Enviadas:** Lista transacciones donde el usuario es remitente.                                | IBAN Usuario             | `200` (Array `TransactionView`)                            |
+| `GET`    | `/user/<iban>/received` | **Historial Recibidas:** Lista transacciones donde el usuario es receptor.                                | IBAN Usuario             | `200` (Array `TransactionView`)                            |
+| `PATCH`  | `/<iban>`               | **Revertir:** Deshace una transacción completada (devolución de fondos).                                  | IBAN en URL              | `200`, `400` (Si no es reversible)                         |
+| `DELETE` | `/<iban>`               | **Borrar:** Eliminación lógica de transacciones fallidas o pendientes.                                    | IBAN en URL              | `200`, `400` (Si ya completada)                            |
+| `PUT`    | `/<iban>/status`        | **Actualizar Estado:** Cambio manual de estado (Admin/Sistema).                                           | JSON `{"status": "..."}` | `200`                                                      |
+
+### Microservicio User Auth (NestJS / Express)
+Autenticación centralizada y gestión de usuarios con persistencia en MongoDB. Incluye documentación Swagger en `/api`.
+
+**Prefijo:** `/v1`
+
+| Método   | Endpoint                | Descripción                                                                                | Códigos de Respuesta      |
+|:---------|:------------------------|:-------------------------------------------------------------------------------------------|:--------------------------|
+| `POST`   | `/users`                | Crea usuario (hash de contraseña, contacto, plan).                                         | `201`, `400`              |
+| `GET`    | `/users`                | Lista todos los usuarios.                                                                  | `200`                     |
+| `GET`    | `/users/{identifier}`   | Recupera usuario por IBAN o email.                                                         | `200`, `404`              |
+| `PUT`    | `/users/{iban}`         | Reemplaza datos completos de un usuario.                                                   | `200`, `400`, `404`       |
+| `PATCH`  | `/users/{iban}`         | Actualización parcial de campos (nombre, email, teléfono, password).                       | `200`, `400`, `404`       |
+| `DELETE` | `/users/{iban}`         | Elimina un usuario por IBAN.                                                               | `204`, `404`              |
+| `DELETE` | `/users`                | Vacía la colección (uso administrativo).                                                   | `204`                     |
+| `POST`   | `/auth/login`           | Login con CAPTCHA y emisión de JWT con identificador único (JTI).                          | `200`, `400`, `401`       |
+| `GET`    | `/auth/validate`        | Valida un token Bearer, comprueba lista negra y devuelve el plan asociado al usuario.      | `200`, `401`, `403`       |
+| `POST`   | `/auth/logout`          | Revoca el token JWT actual añadiéndolo a la lista negra (requiere header Authorization).   | `204`, `401`              |
+
+### Microservicio Anti-Fraud (NestJS / Express)
+Servicio de análisis antifraude y gestión de alertas. Usa MongoDB para persistencia y circuit breaker para bloquear cuentas en Accounts cuando detecta riesgo.
+
+**Prefijo:** `/v1`
+
+| Método   | Endpoint                     | Descripción                                                                             | Códigos de Respuesta      |
+|:---------|:-----------------------------|:----------------------------------------------------------------------------------------|:--------------------------|
+| `POST`   | `/fraud-alerts/check`        | Evalúa si una transacción es fraudulenta (importe, histórico, destino) y abre alerta.    | `200`, `400`, `500`       |
+| `GET`    | `/users/{iban}/fraud-alerts` | Lista alertas asociadas a un IBAN concreto (origen).                                     | `200`, `404`, `400`       |
+| `PUT`    | `/fraud-alerts/{id}`         | Actualiza una alerta (estado: PENDING/REVIEWED/CONFIRMED/FALSE_POSITIVE, motivo).        | `200`, `404`, `400`       |
+| `DELETE` | `/fraud-alerts/{id}`         | Elimina una alerta de fraude.                                                            | `200`, `404`, `400`       |
+
+### Microservicio Bank Statements (Node.js / Express)
+Gestión de estados de cuenta bancarios con generación automática mensual y manual. Persistencia en MongoDB con Mongoose, documentación en swagger.
+
+**Prefijo:** `/v1/bankstatements`
+
+| Método   | Endpoint                       | Descripción                                                                      | Códigos de Respuesta      |
+|:---------|:-------------------------------|:---------------------------------------------------------------------------------|:--------------------------|
+| `GET`    | `/health`                      | Health check del servicio                                                        | `200`, `500`              |
+| `GET`    | `/by-iban/:iban`               | Lista todos los meses disponibles para un IBAN                                   | `200`, `400`, `403`, `404`|
+| `GET`    | `/by-iban?iban=...&month=...`  | Obtiene estado de cuenta específico por IBAN y mes (YYYY-MM)                     | `200`, `400`, `403`, `404`|
+| `GET`    | `/:id`                         | Obtiene estado de cuenta por ID de MongoDB                                       | `200`, `400`, `404`       |
+| `POST`   | `/generate`                    | Generación bulk/single de estados de cuenta                                      | `201`, `400`, `500`       |
+| `POST`   | `/generate-current`            | Genera estado de cuenta del mes actual consumiendo transacciones externas        | `201`, `200`, `400`, `500`|
+| `DELETE` | `/:id`                         | Elimina estado de cuenta por ID                                                  | `204`, `400`, `404`       |
+| `PUT`    | `/account/:iban/statements`    | Reemplaza todos los statements de una cuenta                                     | `200`, `400`, `404`       |
 
 ---
 
@@ -213,20 +326,20 @@ Para evitar fallos en cascada cuando un microservicio dependiente (Cards o Curre
 
 * **Implementación (Accounts):** Se ha aplicado el **Patrón Circuit Breaker**. Si el microservicio de Divisas falla repetidamente, el sistema deja de enviar peticiones temporalmente y devuelve un error controlado, permitiendo que el servicio externo se recupere.
 * **Gestión de Conexiones (Network Watcher):** Se ha desarrollado un *Network Watcher* que monitoriza los servicios externos (cache redis y base de datos) para comporbar su estado. Si se pierde la conexion con alguno, el sistema intenta reconectar. En el caso de la base de datos principal, se intenta reconectar 5 veces antes de que caiga el microservicio.
-* **Evidencia en código:** [Circuit Breaker](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/services/Cards_service.py), [Network Watcher](https://github.com/BancUS-FISProject/microservice-accounts/blob/master/src/accounts/core/external_connections.py)
+* **Evidencia en código:** [Ver implementación del Circuit Breaker / Network Watcher]([PON_AQUI_EL_LINK_A_GITHUB])
 
 ### 6.2. Estrategia de Caché Multinivel (Rendimiento y Costes)
 Se ha implementado una estrategia de caché híbrida para reducir la latencia y, crucialmente, minimizar el consumo de APIs externas de pago.
 
 * **Caché Distribuida (Redis):** Ambos microservicios (Accounts y Currencies) utilizan Redis como primera capa de caché para datos de acceso frecuente.
 * **Caché Local (Fallback):** En el microservicio de **Accounts** y **Currencies**, se ha implementado un sistema de alta disponibilidad: si Redis se cae, el sistema conmuta automáticamente a una caché en memoria local del contenedor, garantizando que el servicio no se detenga por un fallo en la infraestructura de caché. Esto incrementaria el uso de recursos y la api externa ya que cada contenedor debe gestionar su propia cache.
-* **Evidencia en código:** [Ver lógica de caché Redis/Local en Accounts](https://github.com/BancUS-FISProject/microservice-accounts/tree/master/src/accounts/db)
+* **Evidencia en código:** [Ver lógica de caché Redis/Local en Accounts]([PON_AQUI_EL_LINK_A_GITHUB])
 
 ### 6.3. Optimización de Recursos Externos (Gestión de Cuotas API)
 El microservicio de **Currencies** consume la API externa "Currency Converter Pro1" de RapidAPI. Dado que el plan gratuito tiene un límite de 3000 peticiones/mes, se ha diseñado una lógica de ahorro estricta.
 
 * 3000 peticiones mes equivalen aprox. a una petición cada 15-20 minutos. El sistema cachea los valores de las divisas en Redis con un TTL (Time To Live) ajustado a este intervalo. Si se solicita un cambio de divisa (ej. EUR -> USD) y el dato en caché es reciente, **no se consume cuota de la API externa**.
-* **Evidencia en código:** [Ver servicio de Currencies y configuración de TTL]()
+* **Evidencia en código:** [Ver servicio de Currencies y configuración de TTL]([PON_AQUI_EL_LINK_A_GITHUB_JAVA])
 
 ### 6.4. Observabilidad y Monitorización (Health Checks & Logs)
 Para facilitar el despliegue en orquestadores como Kubernetes y la depuración, se han estandarizado los mecanismos de salud y trazas.
@@ -299,7 +412,7 @@ A continuación se detalla cómo la arquitectura de microservicios propuesta cum
 * **Principio:** Ejecutar la aplicación como uno o más procesos sin estado (Stateless).
 * **Implementación:** Los microservicios no guardan estado de sesión del usuario en memoria (*sticky sessions*).
     * La persistencia se delega a la Base de Datos o a la caché distribuida (**Redis**).
-    * La caché local de los servicios **Accounts**, **Currencies**, **Cards** se trata como efímera: si el proceso se reinicia, se reconstruye sin pérdida de datos crítica.
+    * La caché local de los servicios **Accounts** y **Cards** se trata como efímera: si el proceso se reinicia, se reconstruye sin pérdida de datos crítica.
     * **Frontend:** al ser un cliente, la sesión se gestiona en el navegador, sin dependencia de estado en servidor web.
 
 ### 7. Port Binding (Asignación de Puertos)

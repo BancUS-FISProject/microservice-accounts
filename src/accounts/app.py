@@ -40,8 +40,8 @@ def create_app():
     schema.tags = [
         Tag(name="v1", description="API version 1"),
     ]
-    schema.openapi_path = "/api/openapi.json"
-    schema.swagger_ui_path = "/api/docs"
+    schema.openapi_path = "/v1/accounts/api/openapi.json"
+    schema.swagger_ui_path = "/v1/accounts/api/docs"
     schema.init_app(app)
     # Open API Specification
     
