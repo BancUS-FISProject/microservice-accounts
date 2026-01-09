@@ -192,9 +192,9 @@ Los planes definen límites y activación de capacidades. El backend se consider
 
 | Plan            |    Precio    | Límites y características funcionales                                                                         | Extrafuncionales / capacidad                    |
 |:----------------|:------------:|:--------------------------------------------------------------------------------------------------------------|:------------------------------------------------|
-| **Básico**      |  0 EUR/mes   | 1 tarjeta virtual y hasta 5 operaciones/mes. Sin pagos programados, notificaciones y servicio antifraude      | Límite de uso conservador y protección por plan |
-| **Estudiante**  | 4,99 EUR/mes | Hasta 5 tarjetas, hasta 20 operaciones/mes, notificaciones en tiempo real, servicio antifraude                | Mayor capacidad y prioridad estándar            |
-| **Profesional** | 9,99 EUR/mes | Tarjetas ilimitadas, operaciones ilimitadas, pagos programados, antifraude ampliado, notificaciones avanzadas | Capacidad alta, sin límites y mejor experiencia |
+| **Básico**      |  0 EUR/mes   | 1 tarjeta virtual y hasta 5 transacciones/mes. Con un único pago programados y Notificaciones sobre las transacciones en tiempo real      | Límite de uso conservador y protección por plan |
+| **Estudiante**  | 4,99 EUR/mes | 5 tarjetas virtuales y hasta 10 transacciones/mes. Con la posibilidad de realizar 10 pagos programados y Notificaciones sobre las transacciones, accesos y pagos programados en tiempo real                 | Mayor capacidad y prioridad estándar            |
+| **Profesional** | 9,99 EUR/mes | Tarjetas ilimitadas, operaciones ilimitadas, pagos programados ilimitados y notificaciones de transacciones, accesos, pagos programados e historial en tiempo real | Capacidad alta, sin límites y mejor experiencia |
 
 **Aplicación automática de límites**
 - Las políticas de plan se aplican en backend (y, si se decide, en el Gateway).
